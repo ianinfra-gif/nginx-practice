@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevOps 常用指令手冊</title>
+
+    <style>
+        body {
+            font-family: Arial, "Microsoft JhengHei", sans-serif;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+            line-height: 1.8;
+            background-color: #f7f7f7;
+            color: #222;
+        }
+
+        h1 {
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            margin-top: 35px;
+            border-left: 5px solid #555;
+            padding-left: 12px;
+        }
+
+        ul {
+            padding-left: 25px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        code {
+            background-color: #e8e8e8;
+            padding: 3px 7px;
+            border-radius: 5px;
+            font-family: Consolas, monospace;
+        }
+
+        .note {
+            margin-top: 40px;
+            padding: 15px;
+            background-color: #fff3cd;
+            border-left: 5px solid #d39e00;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>DevOps（開發維運）常用指令手冊</h1>
+
+    <h2>🐧 Linux（Linux 作業系統）基礎</h2>
+    <ul>
+        <li><code>pwd</code>：顯示目前所在的完整目錄路徑</li>
+        <li><code>cd [路徑]</code>：切換工作目錄</li>
+        <li><code>ls -la</code>：查看所有檔案、隱藏檔與詳細權限</li>
+        <li><code>cat [檔名]</code>：查看檔案內容</li>
+        <li><code>vim [檔名]</code>：編輯文字檔案</li>
+        <li><code>mkdir [名稱]</code>：建立資料夾</li>
+        <li><code>cp [來源] [目的地]</code>：複製檔案</li>
+        <li><code>mv [來源] [目的地]</code>：移動或重新命名檔案</li>
+        <li><code>rm [檔名]</code>：刪除檔案</li>
+        <li><code>chmod [權限] [檔案]</code>：修改檔案權限</li>
+        <li><code>sudo [指令]</code>：使用管理者權限執行指令</li>
+    </ul>
+
+
+    <h2>🔍 系統與 Log（紀錄）檢查</h2>
+    <ul>
+        <li><code>tail -f [檔名]</code>：持續查看最新 Log（紀錄）</li>
+        <li><code>grep "關鍵字" [檔名]</code>：搜尋檔案內指定文字</li>
+        <li><code>find [路徑] -name "[名稱]"</code>：搜尋檔案或資料夾</li>
+        <li><code>df -h</code>：查看磁碟空間</li>
+        <li><code>free -h</code>：查看記憶體使用量</li>
+        <li><code>ps aux</code>：查看 Process（程序）</li>
+        <li><code>top</code>：即時查看 CPU（處理器）、記憶體與 Process（程序）</li>
+    </ul>
+
+
+    <h2>🌐 網路檢查</h2>
+    <ul>
+        <li><code>ip addr</code>：查看網路介面與 IP（網路位址）</li>
+        <li><code>ping [IP / 網域]</code>：測試網路連線</li>
+        <li><code>curl [網址]</code>：測試 HTTP（超文字傳輸協定）回應</li>
+        <li><code>ss -tulpn</code>：查看 Port（連接埠）與使用中的 Process（程序）</li>
+        <li><code>ssh user@host</code>：SSH（安全遠端連線）登入遠端主機</li>
+    </ul>
+
+
+    <h2>⚙️ Service（服務）管理</h2>
+    <ul>
+        <li><code>systemctl status [服務]</code>：查看 Service（服務）狀態</li>
+        <li><code>systemctl restart [服務]</code>：重新啟動 Service（服務）</li>
+        <li><code>journalctl -u [服務] -f</code>：即時查看 Service Log（服務紀錄）</li>
+    </ul>
+
+
+    <h2>📦 Git（版本控制）</h2>
+    <ul>
+        <li><code>git init</code>：初始化 Git（版本控制）Repository（儲存庫）</li>
+        <li><code>git clone [網址]</code>：複製遠端 Repository（儲存庫）</li>
+        <li><code>git status</code>：查看目前檔案變更狀態</li>
+        <li><code>git diff</code>：查看實際修改內容</li>
+        <li><code>git add .</code>：將全部修改加入 Staging Area（暫存區）</li>
+        <li><code>git commit -m "說明"</code>：建立 Commit（提交）紀錄</li>
+        <li><code>git branch</code>：查看 Branch（分支）</li>
+        <li><code>git switch [分支]</code>：切換 Branch（分支）</li>
+        <li><code>git fetch</code>：取得遠端最新資料</li>
+        <li><code>git pull</code>：下載並合併遠端最新內容</li>
+        <li><code>git push</code>：將本地 Commit（提交）推送到遠端</li>
+        <li><code>git log --oneline</code>：簡潔查看 Commit（提交）歷史</li>
+    </ul>
+
+
+    <h2>🐳 Docker Compose（容器編排）</h2>
+    <ul>
+        <li><code>docker compose up -d</code>：背景啟動所有 Service（服務）</li>
+        <li><code>docker compose up -d --build</code>：重新 Build（建置）並啟動服務</li>
+        <li><code>docker compose ps</code>：查看 Container（容器）運作狀態</li>
+        <li><code>docker compose logs -f</code>：即時查看 Container Log（容器紀錄）</li>
+        <li><code>docker compose restart</code>：重新啟動服務</li>
+        <li><code>docker compose exec [服務] sh</code>：進入正在執行的 Container（容器）</li>
+        <li><code>docker compose down</code>：停止並移除 Container（容器）服務</li>
+    </ul>
+
+
+    <div class="note">
+        <strong>常用排錯順序：</strong><br>
+        git status → docker compose ps → docker compose logs -f →
+        systemctl status → journalctl → ss -tulpn → curl
+    </div>
+
+</body>
+</html>
