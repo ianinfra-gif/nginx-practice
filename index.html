@@ -1,288 +1,466 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <title>個人指令筆記｜開發維運</title>
 <style>
-:root { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif; color-scheme: light; --canvas:#f7f8fa; --side:#f2f4f7; --surface:#fff; --text:#172232; --muted:#657387; --stroke:#e3e8ef; --accent:#216f74; --accent-soft:#e8f4f1; --code:#f2f5f8; --button:#f3f6f9; --shadow:0 14px 40px rgba(23,34,50,.035); --warn:#a7673e; }
-:root[data-theme="dark"] { color-scheme: dark; --canvas:#111720; --side:#151d28; --surface:#1b2531; --text:#eff3f8; --muted:#a4b2c3; --stroke:#344052; --accent:#8acfc8; --accent-soft:#203c3d; --code:#141d27; --button:#263444; --shadow:0 14px 40px rgba(0,0,0,.1); --warn:#f0ae83; }
-* { box-sizing:border-box; } html { scroll-behavior:smooth; scroll-padding-top:30px; } body { margin:0; background:var(--canvas); color:var(--text); font-size:14px; line-height:1.6; } button,input { font:inherit; } button { cursor:pointer; } [hidden] { display:none !important; } ::selection { background:#bde6df; color:#172232; }
-.app { display:grid; grid-template-columns:270px minmax(0,1fr); min-height:100vh; } .sidebar { position:sticky; top:0; height:100vh; overflow:auto; background:var(--side); border-right:1px solid var(--stroke); padding:33px 20px 24px; } .brand { padding:4px 13px 30px; border-bottom:1px solid var(--stroke); margin-bottom:23px; } .brand-emblem { display:inline-flex; justify-content:center; align-items:center; width:40px; height:40px; color:var(--accent); background:var(--accent-soft); border:1px solid var(--stroke); border-radius:12px; font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-weight:800; font-size:17px; margin-bottom:16px; } .brand h2 { font-size:16px; line-height:1.35; letter-spacing:.025em; margin:0; } .brand p { margin:7px 0 0; font-size:12px; color:var(--muted); } .nav-label { font-size:11px; font-weight:750; letter-spacing:.11em; color:var(--muted); margin:18px 14px 12px; } .nav-link { display:flex; align-items:center; gap:11px; padding:10px 12px; border-radius:9px; color:var(--muted); text-decoration:none; transition:background .15s,color .15s; margin:3px 0; font-size:12px; white-space:nowrap; } .nav-link:hover,.nav-link:focus-visible { background:var(--accent-soft); color:var(--text); outline:none; } .nav-num { font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:10px; color:var(--accent); font-weight:700; } .nav-count { margin-left:auto; font-variant-numeric:tabular-nums; color:var(--muted); font-size:11px; } .sidebar-bottom { margin-top:34px; padding:20px 12px 10px; border-top:1px solid var(--stroke); font-size:11px; line-height:1.9; color:var(--muted); } .sidebar-bottom strong { font-weight:650; color:var(--text); }
-.main { width:100%; min-width:0; } .main-inner { max-width:1110px; margin:0 auto; padding:56px clamp(22px,5vw,75px) 90px; } .topline { display:flex; align-items:center; justify-content:space-between; gap:15px; margin-bottom:18px; } .eyebrow { color:var(--accent); font-size:11px; font-weight:800; letter-spacing:.11em; } .theme-btn { color:var(--muted); border:1px solid var(--stroke); background:var(--surface); padding:8px 13px; border-radius:9px; font-size:12px; } .theme-btn:hover { color:var(--text); border-color:var(--accent); } h1 { font-size:clamp(31px,4.2vw,46px); font-weight:780; letter-spacing:-.035em; line-height:1.22; margin:0 0 17px; } .lead { color:var(--muted); font-size:15px; margin:0; max-width:640px; line-height:1.95; } .hero { margin-bottom:34px; } .hero-metrics { display:flex; gap:18px; flex-wrap:wrap; margin-top:23px; } .metric { display:flex; align-items:baseline; gap:7px; color:var(--muted); font-size:12px; } .metric strong { font-size:21px; font-weight:750; color:var(--text); font-variant-numeric:tabular-nums; } .metric + .metric { border-left:1px solid var(--stroke); padding-left:18px; }
-.tools { display:flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--stroke); border-radius:13px; padding:12px; box-shadow:var(--shadow); margin-bottom:42px; } .search { display:flex; flex:1; align-items:center; gap:10px; min-width:0; } .search svg { flex:0 0 auto; margin-left:7px; color:var(--muted); } #search { background:transparent; color:var(--text); border:0; outline:0; width:100%; min-width:80px; padding:9px 0; font-size:13px; } #search::placeholder { color:var(--muted); opacity:.9; } .kbd { flex:0 0 auto; border:1px solid var(--stroke); border-radius:6px; color:var(--muted); padding:1px 7px; font-size:11px; font-family:ui-monospace,SFMono-Regular,Consolas,monospace; } .filter-btn { white-space:nowrap; border:1px solid var(--stroke); background:var(--button); padding:9px 12px; border-radius:9px; color:var(--muted); font-size:12px; } .filter-btn:hover,.filter-btn[aria-pressed="true"] { border-color:var(--accent); background:var(--accent-soft); color:var(--accent); } .results { min-height:20px; margin:-28px 0 26px; color:var(--muted); font-size:12px; }
-.command-section { margin-bottom:53px; scroll-margin-top:35px; } .section-heading { display:flex; gap:16px; align-items:flex-start; margin:0 0 15px; } .section-index { flex-shrink:0; display:flex; justify-content:center; align-items:center; width:36px; height:36px; border:1px solid var(--stroke); border-radius:10px; font:700 12px ui-monospace,SFMono-Regular,Consolas,monospace; color:var(--accent); background:var(--surface); } .section-title { flex:1; min-width:0; } .section-title h2 { font-size:20px; line-height:1.4; margin:0 0 5px; font-weight:740; letter-spacing:-.018em; } .section-title p { font-size:12px; line-height:1.65; margin:0; color:var(--muted); } .section-count { white-space:nowrap; margin:6px 0; color:var(--muted); font-size:11px; } .command-list { border:1px solid var(--stroke); background:var(--surface); border-radius:13px; overflow:hidden; box-shadow:var(--shadow); } .command-row { display:grid; grid-template-columns:minmax(210px,.9fr) minmax(0,1.45fr); gap:22px; padding:20px 22px; align-items:flex-start; } .command-row + .command-row { border-top:1px solid var(--stroke); } .command-row:hover { background:color-mix(in srgb,var(--surface) 92%,var(--accent-soft)); } .command-left { min-width:0; } .command-code { min-width:0; } .command-code code { display:block; overflow-wrap:anywhere; white-space:normal; background:var(--code); border:1px solid var(--stroke); border-radius:7px; padding:10px 12px; font-size:12px; line-height:1.6; color:var(--text); font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace; } .command-actions { display:flex; gap:8px; align-items:center; margin-top:9px; } .copy-btn,.star-btn { border:1px solid transparent; color:var(--muted); background:transparent; border-radius:6px; font-size:11px; padding:3px 6px; } .copy-btn:hover,.star-btn:hover { border-color:var(--stroke); background:var(--button); color:var(--text); } .star-btn { font-size:19px; line-height:1.1; padding:1px 7px; } .star-btn[aria-pressed="true"] { color:var(--accent); } .command-right { min-width:0; padding-top:2px; } .command-heading { display:flex; align-items:center; flex-wrap:wrap; gap:7px; } .command-heading strong { font-size:13px; font-weight:740; } .keyword,.risk-tag { font-size:10px; line-height:1.45; border-radius:5px; padding:2px 6px; color:var(--accent); background:var(--accent-soft); font-weight:600; } .risk-tag { color:var(--warn); background:color-mix(in srgb,var(--warn) 10%,var(--surface)); } .command-desc { margin:6px 0 5px; font-size:12px; line-height:1.8; color:var(--text); } .command-tip { margin:0; color:var(--muted); font-size:11.5px; line-height:1.9; } .tip-prefix { display:inline-block; margin-right:8px; font-size:10px; font-weight:750; color:var(--muted); } .empty { text-align:center; padding:46px 24px; background:var(--surface); border:1px dashed var(--stroke); border-radius:12px; color:var(--muted); } .empty strong { display:block; font-size:16px; color:var(--text); margin-bottom:6px; } .footer { color:var(--muted); border-top:1px solid var(--stroke); padding-top:19px; margin-top:16px; line-height:1.9; font-size:11px; }
-@media(max-width:1100px) { .app { grid-template-columns:220px minmax(0,1fr); } .sidebar { padding-left:13px; padding-right:13px; } .command-row { grid-template-columns:minmax(160px,.85fr) minmax(0,1.3fr); gap:18px; } }
-@media(max-width:850px) { .app { display:block; } .sidebar { position:static; height:auto; overflow:visible; padding:18px 20px 10px; } .brand { display:flex; align-items:center; gap:12px; padding:0 0 12px; margin:0 0 8px; border-bottom:0; } .brand-emblem { width:34px; height:34px; margin:0; border-radius:9px; font-size:14px; } .brand h2 { font-size:13px; } .brand p,.nav-label,.sidebar-bottom { display:none; } .nav { display:flex; gap:5px; overflow-x:auto; padding:4px 0 9px; scrollbar-width:thin; } .nav-link { flex:none; padding:6px 10px; margin:0; border:1px solid var(--stroke); background:var(--surface); } .nav-count { display:none; } .main-inner { padding:34px 25px 62px; } .tools { margin-bottom:33px; } }
-@media(max-width:590px) { .main-inner { padding:28px 16px 54px; } .lead { font-size:13px; } .hero-metrics { gap:13px; } .metric + .metric { padding-left:13px; } .tools { padding:8px; gap:5px; } .kbd { display:none; } .filter-btn { padding:9px; } .command-row { display:block; padding:16px 16px 18px; } .command-left { display:flex; gap:7px; align-items:flex-start; justify-content:space-between; } .command-code { flex:1; } .command-code code { padding:9px 10px; } .command-actions { margin-top:1px; gap:1px; } .command-right { margin-top:9px; padding:0; } .section-title h2 { font-size:17px; } .section-heading { gap:10px; } .section-count { display:none; } .results { margin-top:-20px; } }
-@media print { :root { color-scheme:light; --canvas:#fff; --surface:#fff; --text:#111; --muted:#555; --stroke:#ddd; --code:#f7f7f7; } body { background:white; } .app { display:block; } .sidebar,.tools,.theme-btn,.command-actions,.footer { display:none!important; } .main-inner { max-width:100%; padding:0; } .hero { margin:0 0 16px; } .command-section { break-before:auto; margin-bottom:24px; } .command-row { break-inside:avoid; padding:9px 13px; } .command-list { box-shadow:none; } .section-heading { margin-bottom:7px; } }
+
+:root{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif;
+  color-scheme:light; --canvas:#f7f8fa; --sidebar:#f1f4f6; --surface:#ffffff;
+  --ink:#192637; --muted:#64748a; --fine:#77869a; --line:#e0e7ee;
+  --accent:#176b70; --accent-soft:#e6f2f0; --code:#f4f7fa;
+  --hover:#f9fbfc; --warning:#9b5135; --warn-bg:#fff4ef;
+  --shade:0 6px 20px rgba(20,37,55,.035);
+}
+:root[data-theme="dark"]{
+  color-scheme:dark; --canvas:#101820; --sidebar:#141f2a; --surface:#1b2835;
+  --ink:#e8eef5; --muted:#afbdcb; --fine:#9facbe; --line:#344458;
+  --accent:#80cbc5; --accent-soft:#223e42; --code:#15212d;
+  --hover:#203040; --warning:#f1b18d; --warn-bg:#402f2b;
+  --shade:0 8px 24px rgba(0,0,0,.12);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:92px}
+body{margin:0;background:var(--canvas);color:var(--ink);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+button,input{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+[hidden]{display:none!important}::selection{background:#b6dfda;color:#12343c}
+.app{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:100vh;min-height:100dvh}
+.sidebar{position:sticky;top:0;height:100vh;height:100dvh;width:248px;min-width:0;overflow-y:auto;overflow-x:hidden;padding:28px 14px 20px;background:var(--sidebar);border-right:1px solid var(--line);scrollbar-width:thin}
+.brand{display:flex;align-items:center;gap:12px;padding:2px 10px 24px;margin-bottom:19px;border-bottom:1px solid var(--line)}
+.brand-icon{display:grid;place-items:center;width:38px;height:38px;flex:none;border-radius:11px;background:var(--accent-soft);color:var(--accent);font:700 16px ui-monospace,SFMono-Regular,Consolas,monospace}
+.brand strong{display:block;font-size:15px;letter-spacing:.01em;line-height:1.45}
+.brand small{display:block;font-size:11px;color:var(--muted);margin-top:3px}
+.nav-label{font-size:11px;color:var(--fine);font-weight:700;letter-spacing:.09em;padding:0 10px;margin:0 0 9px}
+.nav{display:grid;gap:3px;min-width:0}
+.nav-link{min-width:0;width:100%;display:grid;grid-template-columns:22px minmax(0,1fr) 23px;align-items:start;gap:8px;border-radius:8px;padding:10px 9px;color:var(--muted);text-decoration:none;font-size:12px;line-height:1.5;transition:background .15s,color .15s}
+.nav-link:hover,.nav-link[aria-current="location"]{background:var(--accent-soft);color:var(--ink)}
+.nav-num{font:700 11px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--accent)}
+.nav-text{min-width:0;overflow-wrap:anywhere}
+.nav-count{font-variant-numeric:tabular-nums;font-size:11px;justify-self:end;color:var(--fine);line-height:1.7}
+.side-caption{border-top:1px solid var(--line);margin:24px 9px 0;padding-top:14px;color:var(--fine);font-size:11px;line-height:1.7}
+.main{min-width:0}.main-inner{max-width:1150px;margin:0 auto;padding:38px clamp(22px,3.5vw,58px) 65px}
+.hero{margin-bottom:22px}.hero-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:9px}
+.overline{font-size:11px;font-weight:750;letter-spacing:.07em;color:var(--accent)}
+h1{font-size:clamp(26px,3vw,33px);line-height:1.3;letter-spacing:-.02em;margin:0 0 6px;font-weight:760}
+.lead{color:var(--muted);font-size:13px;line-height:1.7;margin:0;max-width:850px}
+.metrics{font-size:12px;color:var(--muted);margin-top:14px;display:flex;flex-wrap:wrap;gap:7px 12px;align-items:center}
+.metrics strong{font-variant-numeric:tabular-nums;color:var(--ink);font-size:13px}.dot{color:var(--fine)}
+.theme-btn{background:var(--surface);color:var(--muted);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:12px;flex:none}
+.theme-btn:hover{color:var(--ink);border-color:var(--accent)}
+.toolbar{position:sticky;top:9px;z-index:8;display:flex;gap:9px;align-items:center;background:color-mix(in srgb,var(--surface) 96%,transparent);border:1px solid var(--line);box-shadow:var(--shade);border-radius:11px;padding:8px 10px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.search-wrap{min-width:0;display:flex;align-items:center;flex:1;gap:9px;padding:0 6px;color:var(--fine)}
+.search-wrap svg{width:17px;height:17px;flex:none}#search{min-width:0;width:100%;border:0;outline:0;background:transparent;color:var(--ink);padding:6px 0;font-size:13px}
+#search::placeholder{color:var(--fine)}#search:focus-visible{outline:none}
+.search-key{font:11px ui-monospace,SFMono-Regular,Consolas,monospace;border:1px solid var(--line);border-radius:5px;padding:2px 7px;color:var(--fine)}
+.filter-btn{white-space:nowrap;flex:none;padding:8px 11px;color:var(--muted);background:var(--canvas);border:1px solid var(--line);border-radius:8px;font-size:12px}
+.filter-btn:hover,.filter-btn[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+.results{margin:9px 0 24px;color:var(--fine);font-size:12px;min-height:18px}
+.command-section{margin:0 0 33px;scroll-margin-top:95px}
+.section-heading{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
+.section-index{display:grid;place-items:center;width:31px;height:31px;flex:none;border-radius:8px;border:1px solid var(--line);background:var(--surface);font:700 11px ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--accent)}
+.section-meta{min-width:0;flex:1}.section-meta h2{font-size:18px;line-height:1.6;margin:-2px 0 0;font-weight:720}
+.section-meta p{color:var(--muted);font-size:12px;margin:0;line-height:1.5}
+.section-count{flex:none;color:var(--fine);font-size:11px;margin-top:9px;font-variant-numeric:tabular-nums}
+.command-list{border:1px solid var(--line);background:var(--surface);border-radius:11px;overflow:hidden;box-shadow:var(--shade)}
+.command-row{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(250px,1fr);align-items:center;gap:13px 20px;padding:13px 16px;min-width:0;transition:background .12s}
+.command-row + .command-row{border-top:1px solid var(--line)}.command-row:hover{background:var(--hover)}
+.command-info{min-width:0}.command-title{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin:0 0 3px;line-height:1.5}
+.command-title strong{font-size:13px;font-weight:740}.category{color:var(--accent);font-size:10.5px;font-weight:650;background:var(--accent-soft);padding:1px 6px;border-radius:4px}
+.caution .category{color:var(--warning);background:var(--warn-bg)}
+.command-desc{font-size:12.5px;color:var(--ink);line-height:1.55;margin:0}
+.command-tip{font-size:11.5px;color:var(--muted);line-height:1.55;margin:3px 0 0;overflow-wrap:anywhere}
+.command-tip .tip-label{font-weight:700;color:var(--fine);margin-right:5px}
+.caution .command-tip{color:var(--warning)}.caution .command-tip .tip-label{color:var(--warning)}
+.command-box{min-width:0;display:flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:8px;background:var(--code);padding:4px 4px 4px 11px;min-height:44px}
+.command-box code{font:12.5px/1.65 ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;min-width:0;flex:1;overflow-wrap:anywhere;white-space:normal;color:var(--ink);user-select:text}
+.copy-btn,.star-btn{flex:none;min-width:34px;min-height:32px;border:1px solid transparent;background:transparent;color:var(--muted);border-radius:6px;font-size:11px;padding:5px 7px;transition:background .15s}
+.copy-btn:hover,.star-btn:hover{background:var(--surface);border-color:var(--line);color:var(--ink)}
+.star-btn{font-size:21px;line-height:1.1;padding:3px 6px}.star-btn[aria-pressed="true"]{color:var(--accent)}
+.empty{padding:35px 20px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:10px;background:var(--surface)}
+.empty strong{display:block;color:var(--ink);font-size:15px;margin-bottom:7px}
+.footer{font-size:11.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px;line-height:1.75}
+.footer code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:var(--code);padding:1px 3px;border-radius:3px}
+.toast{position:fixed;left:50%;bottom:25px;transform:translate(-50%,10px);background:var(--ink);color:var(--surface);border-radius:9px;padding:10px 16px;box-shadow:var(--shade);font-size:12px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:50;max-width:min(92vw,420px);text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:1060px){.app{grid-template-columns:215px minmax(0,1fr)}.sidebar{width:215px}.main-inner{padding-inline:25px}.command-row{grid-template-columns:minmax(0,1fr) minmax(210px,1fr);gap:15px}}
+@media(max-width:800px){.app{display:block}.sidebar{position:relative;top:auto;height:auto;width:100%;padding:13px 17px 10px;overflow:hidden;border-right:0;border-bottom:1px solid var(--line)}.brand{padding:0;margin:0 0 9px;border:0}.brand-icon{width:32px;height:32px;font-size:13px}.brand strong{font-size:13px}.brand small,.side-caption,.nav-label{display:none}.nav{display:flex;overflow-x:auto;overflow-y:hidden;gap:6px;padding:2px 0 6px;scrollbar-width:thin;overscroll-behavior-x:contain}.nav-link{display:flex;align-items:center;gap:7px;flex:none;width:auto;white-space:nowrap;padding:6px 9px;border:1px solid var(--line);background:var(--surface);font-size:11.5px}.nav-text{overflow-wrap:normal}.nav-count{display:none}.main-inner{padding:25px 22px 52px}.command-row{grid-template-columns:minmax(0,1fr) minmax(260px,1fr)}.toolbar{top:5px}}
+@media(max-width:670px){.main-inner{padding:22px 16px 45px}.hero{margin-bottom:18px}.hero h1{font-size:25px}.hero-top{margin-bottom:7px}.lead{font-size:12px}.toolbar{top:0;border-radius:9px}.search-key{display:none}.filter-btn{padding:8px 9px}.results{margin-bottom:20px}.command-section{margin-bottom:29px;scroll-margin-top:80px}.section-meta h2{font-size:16px}.section-meta p{font-size:11.5px}.section-count{display:none}.command-row{grid-template-columns:minmax(0,1fr);gap:9px;padding:12px 13px}.command-info{order:0}.command-box{order:1}.command-title strong{font-size:13px}.command-tip{font-size:11.5px}.toast{bottom:14px}}
+@media(max-width:360px){.brand{margin-bottom:5px}.theme-btn{padding:6px 7px;font-size:11px}.toolbar{gap:4px;padding:6px}.filter-btn{font-size:11px;padding:8px 6px}.command-box code{font-size:11.5px}.section-heading{gap:9px}.search-wrap{gap:5px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+@media print{html{scroll-behavior:auto}.app{display:block}.sidebar,.toolbar,.theme-btn,.toast,.copy-btn,.star-btn{display:none!important}.main-inner{max-width:none;padding:12px 5px}.hero{margin-bottom:13px}.command-row{break-inside:avoid;background:#fff!important}.command-list{box-shadow:none}.command-section{break-inside:auto}.results{display:none}.command-box{min-height:unset}.footer{font-size:10px}}
 </style>
 </head>
 <body>
-<div class="app">
-<aside class="sidebar" aria-label="分類導覽">
-  <div class="brand"><div class="brand-emblem" aria-hidden="true">&gt;_</div><div><h2>個人指令筆記</h2><p>開發維運・常用指令整理</p></div></div>
-  <div class="nav-label">分類目錄</div><nav class="nav" aria-label="指令分類"><a class="nav-link" href="#linux" data-section="linux"><span class="nav-num">01</span><span>Linux（作業系統）基礎</span><span class="nav-count">11</span></a>
-<a class="nav-link" href="#system" data-section="system"><span class="nav-num">02</span><span>系統與紀錄檢查</span><span class="nav-count">07</span></a>
-<a class="nav-link" href="#network" data-section="network"><span class="nav-num">03</span><span>網路與遠端連線</span><span class="nav-count">05</span></a>
-<a class="nav-link" href="#services" data-section="services"><span class="nav-num">04</span><span>系統服務管理</span><span class="nav-count">03</span></a>
-<a class="nav-link" href="#git" data-section="git"><span class="nav-num">05</span><span>Git（版本控制）</span><span class="nav-count">12</span></a>
-<a class="nav-link" href="#docker" data-section="docker"><span class="nav-num">06</span><span>Docker Compose（容器編排工具）</span><span class="nav-count">07</span></a></nav>
-  <div class="sidebar-bottom"><strong>筆記原則</strong><br>先理解用途，再執行指令。<br>含方括號的內容須替換成實際值。</div>
-</aside>
+<div class="app"><aside class="sidebar" aria-label="分類導覽">
+<div class="brand"><div class="brand-icon" aria-hidden="true">&gt;_</div><div><strong>個人指令筆記</strong><small>開發維運・指令速查</small></div></div>
+<p class="nav-label">分類目錄</p><nav class="nav" aria-label="指令分類">
+<a href="#linux" class="nav-link" data-section="linux"><span class="nav-num">01</span><span class="nav-text">Linux（作業系統）基礎</span><span class="nav-count" aria-hidden="true">11</span></a>
+<a href="#system" class="nav-link" data-section="system"><span class="nav-num">02</span><span class="nav-text">系統與紀錄檢查</span><span class="nav-count" aria-hidden="true">07</span></a>
+<a href="#network" class="nav-link" data-section="network"><span class="nav-num">03</span><span class="nav-text">網路與遠端連線</span><span class="nav-count" aria-hidden="true">05</span></a>
+<a href="#services" class="nav-link" data-section="services"><span class="nav-num">04</span><span class="nav-text">系統服務管理</span><span class="nav-count" aria-hidden="true">03</span></a>
+<a href="#git" class="nav-link" data-section="git"><span class="nav-num">05</span><span class="nav-text">Git（版本控制）</span><span class="nav-count" aria-hidden="true">12</span></a>
+<a href="#docker" class="nav-link" data-section="docker"><span class="nav-num">06</span><span class="nav-text">Docker Compose（容器編排工具）</span><span class="nav-count" aria-hidden="true">07</span></a>
+</nav><p class="side-caption">選擇分類可快速跳轉；輸入關鍵字可搜尋全部內容。</p></aside>
 <main class="main"><div class="main-inner">
-  <div class="hero"><div class="topline"><div class="eyebrow">個人工具箱 / 指令速查</div><button class="theme-btn" type="button" id="theme" aria-label="切換亮色或深色模式">切換深色模式</button></div>
-    <h1>開發維運<br>指令筆記</h1>
-    <p class="lead">以使用情境整理常用指令。每條保留指令本身、用途與操作補充；需要時可搜尋、收藏或直接複製。適合工作中快速查閱，也能作為持續擴充的個人筆記。</p>
-    <div class="hero-metrics"><div class="metric"><strong>45</strong><span>條指令</span></div><div class="metric"><strong>06</strong><span>個分類</span></div><div class="metric"><strong>離線</strong><span>可查閱</span></div></div>
-  </div>
-  <div class="tools" role="search"><label class="search" for="search"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 4.7 4.7"></path></svg><input id="search" type="search" placeholder="搜尋指令、用途、關鍵字…" autocomplete="off" spellcheck="false" aria-label="搜尋指令"><span class="kbd" aria-hidden="true">/</span></label><button id="favFilter" class="filter-btn" type="button" aria-pressed="false">☆ 只看收藏</button></div>
-  <div id="results" class="results" role="status" aria-live="polite">顯示全部 45 條指令</div>
-  <div id="sections"><section class="command-section" id="linux" data-section="linux">
-      <header class="section-heading"><div class="section-index">01</div><div class="section-title"><h2>Linux（作業系統）基礎</h2><p>路徑、檔案、資料夾與權限：先熟悉最常用的終端機操作。</p></div><span class="section-count">11 條</span></header>
-      <div class="command-list"><article class="command-row" data-cmd="pwd">
-          <div class="command-left"><div class="command-code"><code>pwd</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 pwd">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 pwd" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>查看目前位置</strong><span class="keyword">路徑</span></div><p class="command-desc">顯示目前工作目錄的完整路徑。</p><p class="command-tip"><span class="tip-prefix">補充</span>要確認自己正在哪個資料夾時先用它。</p></div>
-        </article><article class="command-row" data-cmd="cd [路徑]">
-          <div class="command-left"><div class="command-code"><code>cd [路徑]</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 cd [路徑]">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 cd [路徑]" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>切換目錄</strong><span class="keyword">路徑</span></div><p class="command-desc">前往指定資料夾，改變後續指令的執行位置。</p><p class="command-tip"><span class="tip-prefix">補充</span>例如：cd /var/log；cd .. 返回上一層；cd ~ 回家目錄。</p></div>
-        </article><article class="command-row" data-cmd="ls -la">
-          <div class="command-left"><div class="command-code"><code>ls -la</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 ls -la">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 ls -la" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>列出詳細檔案資訊</strong><span class="keyword">檢視</span></div><p class="command-desc">同時顯示隱藏檔、權限、擁有者及檔案資訊。</p><p class="command-tip"><span class="tip-prefix">補充</span>-l 顯示詳細資訊；-a 包含以點號開頭的隱藏檔。</p></div>
-        </article><article class="command-row" data-cmd="cat [檔名]">
-          <div class="command-left"><div class="command-code"><code>cat [檔名]</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 cat [檔名]">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 cat [檔名]" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>讀取檔案內容</strong><span class="keyword">檢視</span></div><p class="command-desc">將文字檔完整內容顯示在終端機。</p><p class="command-tip"><span class="tip-prefix">補充</span>適合較短的文字檔；過長的檔案可改用 less [檔名] 分頁查看。</p></div>
-        </article><article class="command-row" data-cmd="vim [檔名]">
-          <div class="command-left"><div class="command-code"><code>vim [檔名]</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 vim [檔名]">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 vim [檔名]" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>編輯文字檔</strong><span class="keyword">編輯</span></div><p class="command-desc">使用 Vim（文字編輯器）開啟或建立檔案。</p><p class="command-tip"><span class="tip-prefix">補充</span>按 i 開始輸入；Esc 離開輸入模式；:wq 儲存離開；:q! 放棄修改離開。</p></div>
-        </article><article class="command-row" data-cmd="mkdir [名稱]">
-          <div class="command-left"><div class="command-code"><code>mkdir [名稱]</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 mkdir [名稱]">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 mkdir [名稱]" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>建立資料夾</strong><span class="keyword">檔案</span></div><p class="command-desc">在目前目錄建立新資料夾。</p><p class="command-tip"><span class="tip-prefix">補充</span>建立多層資料夾可使用 mkdir -p [路徑]。</p></div>
-        </article><article class="command-row" data-cmd="cp [來源] [目的地]">
-          <div class="command-left"><div class="command-code"><code>cp [來源] [目的地]</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 cp [來源] [目的地]">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 cp [來源] [目的地]" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>複製檔案</strong><span class="keyword">檔案</span></div><p class="command-desc">複製檔案到指定位置。</p><p class="command-tip"><span class="tip-prefix">補充</span>若來源是資料夾，通常需加 -r；留意同名檔案可能被覆蓋。</p></div>
-        </article><article class="command-row" data-cmd="mv [來源] [目的地]">
-          <div class="command-left"><div class="command-code"><code>mv [來源] [目的地]</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 mv [來源] [目的地]">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 mv [來源] [目的地]" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>移動或重新命名</strong><span class="keyword">檔案</span></div><p class="command-desc">把檔案或資料夾移至其他位置，也能直接改名。</p><p class="command-tip"><span class="tip-prefix">補充</span>目標已有同名檔案時可能被覆蓋；可用 mv -i 先提示確認。</p></div>
-        </article><article class="command-row is-caution" data-cmd="rm [檔名]">
-          <div class="command-left"><div class="command-code"><code>rm [檔名]</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 rm [檔名]">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 rm [檔名]" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>刪除檔案</strong><span class="keyword">謹慎</span><span class="risk-tag">注意操作</span></div><p class="command-desc">從檔案系統刪除指定檔案。</p><p class="command-tip"><span class="tip-prefix">補充</span>注意：通常不會進入資源回收筒。避免不明確的 rm -rf 操作。</p></div>
-        </article><article class="command-row" data-cmd="chmod [權限] [檔案]">
-          <div class="command-left"><div class="command-code"><code>chmod [權限] [檔案]</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 chmod [權限] [檔案]">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 chmod [權限] [檔案]" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>修改檔案權限</strong><span class="keyword">權限</span></div><p class="command-desc">調整檔案或目錄的讀取、寫入、執行權限。</p><p class="command-tip"><span class="tip-prefix">補充</span>例如 chmod +x script.sh 讓腳本可執行；修改前先用 ls -l 查看權限。</p></div>
-        </article><article class="command-row is-caution" data-cmd="sudo [指令]">
-          <div class="command-left"><div class="command-code"><code>sudo [指令]</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 sudo [指令]">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 sudo [指令]" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>以管理權限執行</strong><span class="keyword">謹慎</span><span class="risk-tag">注意操作</span></div><p class="command-desc">使用授權的管理者權限執行單一指令。</p><p class="command-tip"><span class="tip-prefix">補充</span>僅在必要時使用，先確認指令對系統的影響。</p></div>
-        </article></div></section>
-<section class="command-section" id="system" data-section="system">
-      <header class="section-heading"><div class="section-index">02</div><div class="section-title"><h2>系統與紀錄檢查</h2><p>確認程序、資源使用狀態，快速讀取與查找執行紀錄。</p></div><span class="section-count">7 條</span></header>
-      <div class="command-list"><article class="command-row" data-cmd="tail -f [檔名]">
-          <div class="command-left"><div class="command-code"><code>tail -f [檔名]</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 tail -f [檔名]">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 tail -f [檔名]" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>持續追蹤紀錄</strong><span class="keyword">紀錄</span></div><p class="command-desc">持續顯示文字檔新增的內容。</p><p class="command-tip"><span class="tip-prefix">補充</span>適合觀察服務紀錄；按 Ctrl+C 結束追蹤。</p></div>
-        </article><article class="command-row" data-cmd="grep &quot;關鍵字&quot; [檔名]">
-          <div class="command-left"><div class="command-code"><code>grep &quot;關鍵字&quot; [檔名]</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 grep &quot;關鍵字&quot; [檔名]">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 grep &quot;關鍵字&quot; [檔名]" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>搜尋檔案文字</strong><span class="keyword">搜尋</span></div><p class="command-desc">尋找符合關鍵字的行。</p><p class="command-tip"><span class="tip-prefix">補充</span>可加 -n 顯示行號；-i 忽略英文大小寫。</p></div>
-        </article><article class="command-row" data-cmd="find [路徑] -name &quot;[名稱]&quot;">
-          <div class="command-left"><div class="command-code"><code>find [路徑] -name &quot;[名稱]&quot;</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 find [路徑] -name &quot;[名稱]&quot;">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 find [路徑] -name &quot;[名稱]&quot;" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>依名稱尋找檔案</strong><span class="keyword">搜尋</span></div><p class="command-desc">在指定路徑底下搜尋符合名稱的檔案或資料夾。</p><p class="command-tip"><span class="tip-prefix">補充</span>例如：find . -name &quot;*.log&quot; 搜尋目前目錄下的紀錄檔。</p></div>
-        </article><article class="command-row" data-cmd="df -h">
-          <div class="command-left"><div class="command-code"><code>df -h</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 df -h">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 df -h" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>查看磁碟使用量</strong><span class="keyword">資源</span></div><p class="command-desc">顯示檔案系統的總容量、已用容量與剩餘容量。</p><p class="command-tip"><span class="tip-prefix">補充</span>-h 會將容量轉成較容易閱讀的單位。</p></div>
-        </article><article class="command-row" data-cmd="free -h">
-          <div class="command-left"><div class="command-code"><code>free -h</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 free -h">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 free -h" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>查看記憶體使用量</strong><span class="keyword">資源</span></div><p class="command-desc">查看系統記憶體及交換空間的使用情況。</p><p class="command-tip"><span class="tip-prefix">補充</span>主要適用於 Linux；macOS（蘋果電腦系統）沒有相同內建指令。</p></div>
-        </article><article class="command-row" data-cmd="ps aux">
-          <div class="command-left"><div class="command-code"><code>ps aux</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 ps aux">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 ps aux" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>列出執行中的程序</strong><span class="keyword">程序</span></div><p class="command-desc">檢視目前的程序及其資源占用資訊。</p><p class="command-tip"><span class="tip-prefix">補充</span>可搭配 grep，例如：ps aux | grep python。</p></div>
-        </article><article class="command-row" data-cmd="top">
-          <div class="command-left"><div class="command-code"><code>top</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 top">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 top" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>即時監看系統</strong><span class="keyword">資源</span></div><p class="command-desc">動態查看處理器、記憶體與程序的運作狀況。</p><p class="command-tip"><span class="tip-prefix">補充</span>通常按 q 退出；介面依系統版本可能不同。</p></div>
-        </article></div></section>
-<section class="command-section" id="network" data-section="network">
-      <header class="section-heading"><div class="section-index">03</div><div class="section-title"><h2>網路與遠端連線</h2><p>檢查網路位址、服務可達性、監聽連接埠與遠端登入。</p></div><span class="section-count">5 條</span></header>
-      <div class="command-list"><article class="command-row" data-cmd="ip addr">
-          <div class="command-left"><div class="command-code"><code>ip addr</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 ip addr">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 ip addr" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>查看網路介面位址</strong><span class="keyword">網路</span></div><p class="command-desc">查看網路介面及 IP（網際網路協定位址）設定。</p><p class="command-tip"><span class="tip-prefix">補充</span>這是 Linux 常見指令；macOS（蘋果電腦系統）可改用 ifconfig。</p></div>
-        </article><article class="command-row" data-cmd="ping [IP / 網域]">
-          <div class="command-left"><div class="command-code"><code>ping [IP / 網域]</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 ping [IP / 網域]">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 ping [IP / 網域]" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>測試基本網路可達性</strong><span class="keyword">網路</span></div><p class="command-desc">透過網路控制訊息測試目標是否回應。</p><p class="command-tip"><span class="tip-prefix">補充</span>按 Ctrl+C 停止；無回應不一定代表服務無法使用，可能被防火牆阻擋。</p></div>
-        </article><article class="command-row" data-cmd="curl [網址]">
-          <div class="command-left"><div class="command-code"><code>curl [網址]</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 curl [網址]">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 curl [網址]" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>發出網頁請求</strong><span class="keyword">網路</span></div><p class="command-desc">向指定網址發出請求並查看回傳內容。</p><p class="command-tip"><span class="tip-prefix">補充</span>例如 curl -I https://example.com 只查看回應標頭。</p></div>
-        </article><article class="command-row" data-cmd="ss -tulpn">
-          <div class="command-left"><div class="command-code"><code>ss -tulpn</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 ss -tulpn">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 ss -tulpn" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>查看連接埠與監聽程序</strong><span class="keyword">連接埠</span></div><p class="command-desc">列出網路套接字、監聽中的 TCP／UDP（傳輸控制協定／使用者資料包協定）連接埠及程序。</p><p class="command-tip"><span class="tip-prefix">補充</span>部分程序資訊需管理權限才能完整查看；主要適用於 Linux。</p></div>
-        </article><article class="command-row" data-cmd="ssh user@host">
-          <div class="command-left"><div class="command-code"><code>ssh user@host</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 ssh user@host">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 ssh user@host" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>登入遠端主機</strong><span class="keyword">遠端</span></div><p class="command-desc">透過 SSH（安全殼層協定）連線到遠端系統。</p><p class="command-tip"><span class="tip-prefix">補充</span>把 user 換成帳號、host 換成主機名稱或位址；需要相應的登入憑證。</p></div>
-        </article></div></section>
-<section class="command-section" id="services" data-section="services">
-      <header class="section-heading"><div class="section-index">04</div><div class="section-title"><h2>系統服務管理</h2><p>查看或控制由 systemd（系統與服務管理程式）管理的服務。</p></div><span class="section-count">3 條</span></header>
-      <div class="command-list"><article class="command-row" data-cmd="systemctl status [服務]">
-          <div class="command-left"><div class="command-code"><code>systemctl status [服務]</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 systemctl status [服務]">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 systemctl status [服務]" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>查看服務狀態</strong><span class="keyword">服務</span></div><p class="command-desc">檢視服務是否啟動、狀態與最近的執行資訊。</p><p class="command-tip"><span class="tip-prefix">補充</span>例如 systemctl status nginx；此指令適用於使用 systemd 的 Linux。</p></div>
-        </article><article class="command-row is-caution" data-cmd="systemctl restart [服務]">
-          <div class="command-left"><div class="command-code"><code>systemctl restart [服務]</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 systemctl restart [服務]">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 systemctl restart [服務]" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>重新啟動服務</strong><span class="keyword">謹慎</span><span class="risk-tag">注意操作</span></div><p class="command-desc">停止並重新啟動指定服務。</p><p class="command-tip"><span class="tip-prefix">補充</span>注意：可能短暫中斷連線或處理中的工作，先確認影響範圍。</p></div>
-        </article><article class="command-row" data-cmd="journalctl -u [服務] -f">
-          <div class="command-left"><div class="command-code"><code>journalctl -u [服務] -f</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 journalctl -u [服務] -f">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 journalctl -u [服務] -f" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>即時追蹤服務紀錄</strong><span class="keyword">紀錄</span></div><p class="command-desc">查看指定服務新增的系統日誌內容。</p><p class="command-tip"><span class="tip-prefix">補充</span>按 Ctrl+C 結束；若要查看歷史內容可去掉 -f。</p></div>
-        </article></div></section>
-<section class="command-section" id="git" data-section="git">
-      <header class="section-heading"><div class="section-index">05</div><div class="section-title"><h2>Git（版本控制）</h2><p>追蹤檔案修改、管理分支，以及與遠端儲存庫同步。</p></div><span class="section-count">12 條</span></header>
-      <div class="command-list"><article class="command-row" data-cmd="git init">
-          <div class="command-left"><div class="command-code"><code>git init</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 git init">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 git init" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>建立本地儲存庫</strong><span class="keyword">初始化</span></div><p class="command-desc">將目前資料夾初始化為 Git（版本控制）儲存庫。</p><p class="command-tip"><span class="tip-prefix">補充</span>適合新專案；已有儲存庫時通常不需要重複執行。</p></div>
-        </article><article class="command-row" data-cmd="git clone [網址]">
-          <div class="command-left"><div class="command-code"><code>git clone [網址]</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 git clone [網址]">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 git clone [網址]" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>複製遠端儲存庫</strong><span class="keyword">同步</span></div><p class="command-desc">將遠端儲存庫及其版本歷史下載到本機。</p><p class="command-tip"><span class="tip-prefix">補充</span>執行後通常會建立同名專案資料夾。</p></div>
-        </article><article class="command-row" data-cmd="git status">
-          <div class="command-left"><div class="command-code"><code>git status</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 git status">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 git status" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>查看目前變更</strong><span class="keyword">檢視</span></div><p class="command-desc">檢視所在分支、已修改與待提交的檔案。</p><p class="command-tip"><span class="tip-prefix">補充</span>修改檔案後先使用這個指令確認狀態。</p></div>
-        </article><article class="command-row" data-cmd="git diff">
-          <div class="command-left"><div class="command-code"><code>git diff</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 git diff">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 git diff" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>查看修改差異</strong><span class="keyword">檢視</span></div><p class="command-desc">顯示尚未加入暫存區的內容差異。</p><p class="command-tip"><span class="tip-prefix">補充</span>要檢查已暫存的修改，改用 git diff --staged。</p></div>
-        </article><article class="command-row is-caution" data-cmd="git add .">
-          <div class="command-left"><div class="command-code"><code>git add .</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 git add .">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 git add ." aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>暫存目前目錄的修改</strong><span class="keyword">謹慎</span><span class="risk-tag">注意操作</span></div><p class="command-desc">把目前目錄及子目錄的修改加入暫存區。</p><p class="command-tip"><span class="tip-prefix">補充</span>可能包含新增與刪除檔案；先確認 git status，避免納入敏感資料。</p></div>
-        </article><article class="command-row" data-cmd="git commit -m &quot;說明&quot;">
-          <div class="command-left"><div class="command-code"><code>git commit -m &quot;說明&quot;</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 git commit -m &quot;說明&quot;">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 git commit -m &quot;說明&quot;" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>建立本地提交</strong><span class="keyword">提交</span></div><p class="command-desc">將暫存的修改建立一筆附有說明的版本紀錄。</p><p class="command-tip"><span class="tip-prefix">補充</span>說明建議簡短具體，描述這次改動的目的。</p></div>
-        </article><article class="command-row" data-cmd="git branch">
-          <div class="command-left"><div class="command-code"><code>git branch</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 git branch">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 git branch" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>查看本地分支</strong><span class="keyword">分支</span></div><p class="command-desc">顯示現有本地分支與目前所在的分支。</p><p class="command-tip"><span class="tip-prefix">補充</span>若要連遠端分支一起查看，可用 git branch -a。</p></div>
-        </article><article class="command-row" data-cmd="git switch [分支]">
-          <div class="command-left"><div class="command-code"><code>git switch [分支]</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 git switch [分支]">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 git switch [分支]" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>切換工作分支</strong><span class="keyword">分支</span></div><p class="command-desc">切換到指定的本地分支。</p><p class="command-tip"><span class="tip-prefix">補充</span>若目前有未提交的修改，可能需要先處理才能切換。</p></div>
-        </article><article class="command-row" data-cmd="git fetch">
-          <div class="command-left"><div class="command-code"><code>git fetch</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 git fetch">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 git fetch" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>取得遠端版本資訊</strong><span class="keyword">同步</span></div><p class="command-desc">下載遠端的新版本資訊，但不直接合併進目前分支。</p><p class="command-tip"><span class="tip-prefix">補充</span>適合先觀察遠端變動；可搭配 git status 或 git log 查驗。</p></div>
-        </article><article class="command-row" data-cmd="git pull">
-          <div class="command-left"><div class="command-code"><code>git pull</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 git pull">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 git pull" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>取得並整合遠端更新</strong><span class="keyword">同步</span></div><p class="command-desc">抓取遠端更新，並依儲存庫設定進行合併或重定基底。</p><p class="command-tip"><span class="tip-prefix">補充</span>可能發生衝突；執行前先確認本地未提交修改。</p></div>
-        </article><article class="command-row" data-cmd="git push">
-          <div class="command-left"><div class="command-code"><code>git push</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 git push">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 git push" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>推送本地提交</strong><span class="keyword">同步</span></div><p class="command-desc">把本地提交傳送到設定好的遠端分支。</p><p class="command-tip"><span class="tip-prefix">補充</span>推送前建議先確認分支與提交內容。</p></div>
-        </article><article class="command-row" data-cmd="git log --oneline">
-          <div class="command-left"><div class="command-code"><code>git log --oneline</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 git log --oneline">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 git log --oneline" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>快速查看提交歷史</strong><span class="keyword">檢視</span></div><p class="command-desc">以精簡格式顯示提交識別碼與說明。</p><p class="command-tip"><span class="tip-prefix">補充</span>適合快速辨識近期修改；按 q 可離開分頁顯示。</p></div>
-        </article></div></section>
-<section class="command-section" id="docker" data-section="docker">
-      <header class="section-heading"><div class="section-index">06</div><div class="section-title"><h2>Docker Compose（容器編排工具）</h2><p>以專案設定檔啟動、檢查及管理多個容器化服務。</p></div><span class="section-count">7 條</span></header>
-      <div class="command-list"><article class="command-row" data-cmd="docker compose up -d">
-          <div class="command-left"><div class="command-code"><code>docker compose up -d</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 docker compose up -d">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 docker compose up -d" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>背景啟動專案服務</strong><span class="keyword">啟動</span></div><p class="command-desc">依容器編排設定建立並啟動服務，在背景持續執行。</p><p class="command-tip"><span class="tip-prefix">補充</span>通常需要在有 compose.yaml 等設定檔的專案目錄執行。</p></div>
-        </article><article class="command-row" data-cmd="docker compose up -d --build">
-          <div class="command-left"><div class="command-code"><code>docker compose up -d --build</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 docker compose up -d --build">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 docker compose up -d --build" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>重新建置並啟動</strong><span class="keyword">建置</span></div><p class="command-desc">先重新建置需要的映像，再建立或更新服務。</p><p class="command-tip"><span class="tip-prefix">補充</span>程式碼或映像建置內容變更後常用；可能造成服務重新建立。</p></div>
-        </article><article class="command-row" data-cmd="docker compose ps">
-          <div class="command-left"><div class="command-code"><code>docker compose ps</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 docker compose ps">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 docker compose ps" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>查看服務容器狀態</strong><span class="keyword">檢視</span></div><p class="command-desc">列出此專案的容器、狀態及對應連接埠。</p><p class="command-tip"><span class="tip-prefix">補充</span>適合確認各服務是否啟動與是否異常退出。</p></div>
-        </article><article class="command-row" data-cmd="docker compose logs -f">
-          <div class="command-left"><div class="command-code"><code>docker compose logs -f</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 docker compose logs -f">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 docker compose logs -f" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>持續查看容器紀錄</strong><span class="keyword">紀錄</span></div><p class="command-desc">連續顯示此專案各服務新增的紀錄。</p><p class="command-tip"><span class="tip-prefix">補充</span>可在後面加服務名稱只看單一服務；按 Ctrl+C 離開。</p></div>
-        </article><article class="command-row is-caution" data-cmd="docker compose restart">
-          <div class="command-left"><div class="command-code"><code>docker compose restart</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 docker compose restart">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 docker compose restart" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>重新啟動現有服務</strong><span class="keyword">謹慎</span><span class="risk-tag">注意操作</span></div><p class="command-desc">重新啟動專案中已存在的服務容器。</p><p class="command-tip"><span class="tip-prefix">補充</span>不會重新建置映像；設定變更通常需重新建立容器才會生效。</p></div>
-        </article><article class="command-row" data-cmd="docker compose exec [服務] sh">
-          <div class="command-left"><div class="command-code"><code>docker compose exec [服務] sh</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 docker compose exec [服務] sh">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 docker compose exec [服務] sh" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>進入執行中的容器</strong><span class="keyword">操作</span></div><p class="command-desc">在指定服務的容器內啟動命令列環境。</p><p class="command-tip"><span class="tip-prefix">補充</span>若容器有 bash（命令列殼層），可視需要改用 bash；容器必須正在執行。</p></div>
-        </article><article class="command-row is-caution" data-cmd="docker compose down">
-          <div class="command-left"><div class="command-code"><code>docker compose down</code></div><div class="command-actions"><button class="copy-btn" type="button" title="複製指令" aria-label="複製 docker compose down">複製</button><button class="star-btn" type="button" title="收藏指令" aria-label="收藏 docker compose down" aria-pressed="false">☆</button></div></div>
-          <div class="command-right"><div class="command-heading"><strong>停止並移除專案容器</strong><span class="keyword">謹慎</span><span class="risk-tag">注意操作</span></div><p class="command-desc">停止並移除專案建立的容器與預設網路。</p><p class="command-tip"><span class="tip-prefix">補充</span>預設不會移除具名資料卷；不要隨意加 --volumes，以免刪除資料。</p></div>
-        </article></div></section></div>
-  <div id="empty" class="empty" hidden><strong>找不到符合的指令</strong><span>請嘗試其他關鍵字，或關閉收藏篩選。</span></div>
-  <footer class="footer">使用提醒：<code>[路徑]</code>、<code>[檔名]</code>、<code>[服務]</code> 等皆為需自行替換的示意欄位；程式碼中的空格與符號請依實際環境調整。收藏與主題偏好會嘗試儲存在目前瀏覽器，不會同步到其他裝置。</footer>
-</div></main>
-</div>
+<header class="hero"><div class="hero-top"><span class="overline">個人技術筆記 / 常用指令</span><button type="button" class="theme-btn" id="theme" aria-label="切換亮色或深色模式">切換深色</button></div>
+<h1>開發維運指令筆記</h1><p class="lead">依使用情境整理指令、用途及必要補充。可直接搜尋、複製或收藏，適合工作時快速查閱。</p>
+<div class="metrics"><span><strong>45</strong> 條指令</span><span class="dot" aria-hidden="true">·</span><span><strong>6</strong> 個分類</span><span class="dot" aria-hidden="true">·</span><span>離線可用</span></div></header>
+<div class="toolbar" role="search"><label for="search" class="search-wrap">
+<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.7" cy="10.7" r="6.8"/><path d="m16 16 4.6 4.6"/></svg>
+<input type="search" id="search" aria-label="搜尋指令與用途" autocomplete="off" spellcheck="false" placeholder="搜尋指令、用途或補充說明…"><span class="search-key" aria-hidden="true">/</span></label>
+<button type="button" class="filter-btn" id="favFilter" aria-pressed="false">☆ 只看收藏</button></div>
+<div id="results" class="results" role="status" aria-live="polite">顯示全部 45 條指令</div>
+<div id="sections">
+<section class="command-section" id="linux" data-section="linux"><header class="section-heading"><div class="section-index">01</div><div class="section-meta"><h2>Linux（作業系統）基礎</h2><p>路徑、檔案、資料夾與權限：先熟悉最常用的終端機操作。</p></div><span class="section-count">11 條</span></header><div class="command-list">
+<article class="command-row" data-cmd="pwd" data-search="linux（作業系統）基礎 路徑、檔案、資料夾與權限：先熟悉最常用的終端機操作。 pwd 查看目前位置 顯示目前工作目錄的完整路徑。 要確認自己正在哪個資料夾時先用它。 路徑">
+<div class="command-info"><div class="command-title"><strong>查看目前位置</strong><span class="category">路徑</span></div>
+<p class="command-desc">顯示目前工作目錄的完整路徑。</p><p class="command-tip"><span class="tip-label">補充</span>要確認自己正在哪個資料夾時先用它。</p></div>
+<div class="command-box"><code>pwd</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 pwd">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 pwd" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="cd [路徑]" data-search="linux（作業系統）基礎 路徑、檔案、資料夾與權限：先熟悉最常用的終端機操作。 cd [路徑] 切換目錄 前往指定資料夾，改變後續指令的執行位置。 例如：cd /var/log；cd .. 返回上一層；cd ~ 回家目錄。 路徑">
+<div class="command-info"><div class="command-title"><strong>切換目錄</strong><span class="category">路徑</span></div>
+<p class="command-desc">前往指定資料夾，改變後續指令的執行位置。</p><p class="command-tip"><span class="tip-label">補充</span>例如：cd /var/log；cd .. 返回上一層；cd ~ 回家目錄。</p></div>
+<div class="command-box"><code>cd [路徑]</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 cd [路徑]">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 cd [路徑]" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="ls -la" data-search="linux（作業系統）基礎 路徑、檔案、資料夾與權限：先熟悉最常用的終端機操作。 ls -la 列出詳細檔案資訊 同時顯示隱藏檔、權限、擁有者及檔案資訊。 -l 顯示詳細資訊；-a 包含以點號開頭的隱藏檔。 檢視">
+<div class="command-info"><div class="command-title"><strong>列出詳細檔案資訊</strong><span class="category">檢視</span></div>
+<p class="command-desc">同時顯示隱藏檔、權限、擁有者及檔案資訊。</p><p class="command-tip"><span class="tip-label">補充</span>-l 顯示詳細資訊；-a 包含以點號開頭的隱藏檔。</p></div>
+<div class="command-box"><code>ls -la</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 ls -la">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 ls -la" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="cat [檔名]" data-search="linux（作業系統）基礎 路徑、檔案、資料夾與權限：先熟悉最常用的終端機操作。 cat [檔名] 讀取檔案內容 將文字檔完整內容顯示在終端機。 適合較短的文字檔；過長的檔案可改用 less [檔名] 分頁查看。 檢視">
+<div class="command-info"><div class="command-title"><strong>讀取檔案內容</strong><span class="category">檢視</span></div>
+<p class="command-desc">將文字檔完整內容顯示在終端機。</p><p class="command-tip"><span class="tip-label">補充</span>適合較短的文字檔；過長的檔案可改用 less [檔名] 分頁查看。</p></div>
+<div class="command-box"><code>cat [檔名]</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 cat [檔名]">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 cat [檔名]" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="vim [檔名]" data-search="linux（作業系統）基礎 路徑、檔案、資料夾與權限：先熟悉最常用的終端機操作。 vim [檔名] 編輯文字檔 使用 vim（文字編輯器）開啟或建立檔案。 按 i 開始輸入；esc 離開輸入模式；:wq 儲存離開；:q! 放棄修改離開。 編輯">
+<div class="command-info"><div class="command-title"><strong>編輯文字檔</strong><span class="category">編輯</span></div>
+<p class="command-desc">使用 Vim（文字編輯器）開啟或建立檔案。</p><p class="command-tip"><span class="tip-label">補充</span>按 i 開始輸入；Esc 離開輸入模式；:wq 儲存離開；:q! 放棄修改離開。</p></div>
+<div class="command-box"><code>vim [檔名]</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 vim [檔名]">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 vim [檔名]" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="mkdir [名稱]" data-search="linux（作業系統）基礎 路徑、檔案、資料夾與權限：先熟悉最常用的終端機操作。 mkdir [名稱] 建立資料夾 在目前目錄建立新資料夾。 建立多層資料夾可使用 mkdir -p [路徑]。 檔案">
+<div class="command-info"><div class="command-title"><strong>建立資料夾</strong><span class="category">檔案</span></div>
+<p class="command-desc">在目前目錄建立新資料夾。</p><p class="command-tip"><span class="tip-label">補充</span>建立多層資料夾可使用 mkdir -p [路徑]。</p></div>
+<div class="command-box"><code>mkdir [名稱]</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 mkdir [名稱]">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 mkdir [名稱]" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="cp [來源] [目的地]" data-search="linux（作業系統）基礎 路徑、檔案、資料夾與權限：先熟悉最常用的終端機操作。 cp [來源] [目的地] 複製檔案 複製檔案到指定位置。 若來源是資料夾，通常需加 -r；留意同名檔案可能被覆蓋。 檔案">
+<div class="command-info"><div class="command-title"><strong>複製檔案</strong><span class="category">檔案</span></div>
+<p class="command-desc">複製檔案到指定位置。</p><p class="command-tip"><span class="tip-label">補充</span>若來源是資料夾，通常需加 -r；留意同名檔案可能被覆蓋。</p></div>
+<div class="command-box"><code>cp [來源] [目的地]</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 cp [來源] [目的地]">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 cp [來源] [目的地]" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="mv [來源] [目的地]" data-search="linux（作業系統）基礎 路徑、檔案、資料夾與權限：先熟悉最常用的終端機操作。 mv [來源] [目的地] 移動或重新命名 把檔案或資料夾移至其他位置，也能直接改名。 目標已有同名檔案時可能被覆蓋；可用 mv -i 先提示確認。 檔案">
+<div class="command-info"><div class="command-title"><strong>移動或重新命名</strong><span class="category">檔案</span></div>
+<p class="command-desc">把檔案或資料夾移至其他位置，也能直接改名。</p><p class="command-tip"><span class="tip-label">補充</span>目標已有同名檔案時可能被覆蓋；可用 mv -i 先提示確認。</p></div>
+<div class="command-box"><code>mv [來源] [目的地]</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 mv [來源] [目的地]">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 mv [來源] [目的地]" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row caution" data-cmd="rm [檔名]" data-search="linux（作業系統）基礎 路徑、檔案、資料夾與權限：先熟悉最常用的終端機操作。 rm [檔名] 刪除檔案 從檔案系統刪除指定檔案。 注意：通常不會進入資源回收筒。避免不明確的 rm -rf 操作。 謹慎">
+<div class="command-info"><div class="command-title"><strong>刪除檔案</strong><span class="category">謹慎</span></div>
+<p class="command-desc">從檔案系統刪除指定檔案。</p><p class="command-tip"><span class="tip-label">注意</span>注意：通常不會進入資源回收筒。避免不明確的 rm -rf 操作。</p></div>
+<div class="command-box"><code>rm [檔名]</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 rm [檔名]">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 rm [檔名]" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="chmod [權限] [檔案]" data-search="linux（作業系統）基礎 路徑、檔案、資料夾與權限：先熟悉最常用的終端機操作。 chmod [權限] [檔案] 修改檔案權限 調整檔案或目錄的讀取、寫入、執行權限。 例如 chmod +x script.sh 讓腳本可執行；修改前先用 ls -l 查看權限。 權限">
+<div class="command-info"><div class="command-title"><strong>修改檔案權限</strong><span class="category">權限</span></div>
+<p class="command-desc">調整檔案或目錄的讀取、寫入、執行權限。</p><p class="command-tip"><span class="tip-label">補充</span>例如 chmod +x script.sh 讓腳本可執行；修改前先用 ls -l 查看權限。</p></div>
+<div class="command-box"><code>chmod [權限] [檔案]</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 chmod [權限] [檔案]">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 chmod [權限] [檔案]" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row caution" data-cmd="sudo [指令]" data-search="linux（作業系統）基礎 路徑、檔案、資料夾與權限：先熟悉最常用的終端機操作。 sudo [指令] 以管理權限執行 使用授權的管理者權限執行單一指令。 僅在必要時使用，先確認指令對系統的影響。 謹慎">
+<div class="command-info"><div class="command-title"><strong>以管理權限執行</strong><span class="category">謹慎</span></div>
+<p class="command-desc">使用授權的管理者權限執行單一指令。</p><p class="command-tip"><span class="tip-label">注意</span>僅在必要時使用，先確認指令對系統的影響。</p></div>
+<div class="command-box"><code>sudo [指令]</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 sudo [指令]">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 sudo [指令]" aria-pressed="false">☆</button></div>
+</article>
+</div></section>
+<section class="command-section" id="system" data-section="system"><header class="section-heading"><div class="section-index">02</div><div class="section-meta"><h2>系統與紀錄檢查</h2><p>確認程序、資源使用狀態，快速讀取與查找執行紀錄。</p></div><span class="section-count">7 條</span></header><div class="command-list">
+<article class="command-row" data-cmd="tail -f [檔名]" data-search="系統與紀錄檢查 確認程序、資源使用狀態，快速讀取與查找執行紀錄。 tail -f [檔名] 持續追蹤紀錄 持續顯示文字檔新增的內容。 適合觀察服務紀錄；按 ctrl+c 結束追蹤。 紀錄">
+<div class="command-info"><div class="command-title"><strong>持續追蹤紀錄</strong><span class="category">紀錄</span></div>
+<p class="command-desc">持續顯示文字檔新增的內容。</p><p class="command-tip"><span class="tip-label">補充</span>適合觀察服務紀錄；按 Ctrl+C 結束追蹤。</p></div>
+<div class="command-box"><code>tail -f [檔名]</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 tail -f [檔名]">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 tail -f [檔名]" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="grep &quot;關鍵字&quot; [檔名]" data-search="系統與紀錄檢查 確認程序、資源使用狀態，快速讀取與查找執行紀錄。 grep &quot;關鍵字&quot; [檔名] 搜尋檔案文字 尋找符合關鍵字的行。 可加 -n 顯示行號；-i 忽略英文大小寫。 搜尋">
+<div class="command-info"><div class="command-title"><strong>搜尋檔案文字</strong><span class="category">搜尋</span></div>
+<p class="command-desc">尋找符合關鍵字的行。</p><p class="command-tip"><span class="tip-label">補充</span>可加 -n 顯示行號；-i 忽略英文大小寫。</p></div>
+<div class="command-box"><code>grep &quot;關鍵字&quot; [檔名]</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 grep &quot;關鍵字&quot; [檔名]">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 grep &quot;關鍵字&quot; [檔名]" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="find [路徑] -name &quot;[名稱]&quot;" data-search="系統與紀錄檢查 確認程序、資源使用狀態，快速讀取與查找執行紀錄。 find [路徑] -name &quot;[名稱]&quot; 依名稱尋找檔案 在指定路徑底下搜尋符合名稱的檔案或資料夾。 例如：find . -name &quot;*.log&quot; 搜尋目前目錄下的紀錄檔。 搜尋">
+<div class="command-info"><div class="command-title"><strong>依名稱尋找檔案</strong><span class="category">搜尋</span></div>
+<p class="command-desc">在指定路徑底下搜尋符合名稱的檔案或資料夾。</p><p class="command-tip"><span class="tip-label">補充</span>例如：find . -name &quot;*.log&quot; 搜尋目前目錄下的紀錄檔。</p></div>
+<div class="command-box"><code>find [路徑] -name &quot;[名稱]&quot;</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 find [路徑] -name &quot;[名稱]&quot;">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 find [路徑] -name &quot;[名稱]&quot;" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="df -h" data-search="系統與紀錄檢查 確認程序、資源使用狀態，快速讀取與查找執行紀錄。 df -h 查看磁碟使用量 顯示檔案系統的總容量、已用容量與剩餘容量。 -h 會將容量轉成較容易閱讀的單位。 資源">
+<div class="command-info"><div class="command-title"><strong>查看磁碟使用量</strong><span class="category">資源</span></div>
+<p class="command-desc">顯示檔案系統的總容量、已用容量與剩餘容量。</p><p class="command-tip"><span class="tip-label">補充</span>-h 會將容量轉成較容易閱讀的單位。</p></div>
+<div class="command-box"><code>df -h</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 df -h">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 df -h" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="free -h" data-search="系統與紀錄檢查 確認程序、資源使用狀態，快速讀取與查找執行紀錄。 free -h 查看記憶體使用量 查看系統記憶體及交換空間的使用情況。 主要適用於 linux；macos（蘋果電腦系統）沒有相同內建指令。 資源">
+<div class="command-info"><div class="command-title"><strong>查看記憶體使用量</strong><span class="category">資源</span></div>
+<p class="command-desc">查看系統記憶體及交換空間的使用情況。</p><p class="command-tip"><span class="tip-label">補充</span>主要適用於 Linux；macOS（蘋果電腦系統）沒有相同內建指令。</p></div>
+<div class="command-box"><code>free -h</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 free -h">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 free -h" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="ps aux" data-search="系統與紀錄檢查 確認程序、資源使用狀態，快速讀取與查找執行紀錄。 ps aux 列出執行中的程序 檢視目前的程序及其資源占用資訊。 可搭配 grep，例如：ps aux | grep python。 程序">
+<div class="command-info"><div class="command-title"><strong>列出執行中的程序</strong><span class="category">程序</span></div>
+<p class="command-desc">檢視目前的程序及其資源占用資訊。</p><p class="command-tip"><span class="tip-label">補充</span>可搭配 grep，例如：ps aux | grep python。</p></div>
+<div class="command-box"><code>ps aux</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 ps aux">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 ps aux" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="top" data-search="系統與紀錄檢查 確認程序、資源使用狀態，快速讀取與查找執行紀錄。 top 即時監看系統 動態查看處理器、記憶體與程序的運作狀況。 通常按 q 退出；介面依系統版本可能不同。 資源">
+<div class="command-info"><div class="command-title"><strong>即時監看系統</strong><span class="category">資源</span></div>
+<p class="command-desc">動態查看處理器、記憶體與程序的運作狀況。</p><p class="command-tip"><span class="tip-label">補充</span>通常按 q 退出；介面依系統版本可能不同。</p></div>
+<div class="command-box"><code>top</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 top">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 top" aria-pressed="false">☆</button></div>
+</article>
+</div></section>
+<section class="command-section" id="network" data-section="network"><header class="section-heading"><div class="section-index">03</div><div class="section-meta"><h2>網路與遠端連線</h2><p>檢查網路位址、服務可達性、監聽連接埠與遠端登入。</p></div><span class="section-count">5 條</span></header><div class="command-list">
+<article class="command-row" data-cmd="ip addr" data-search="網路與遠端連線 檢查網路位址、服務可達性、監聽連接埠與遠端登入。 ip addr 查看網路介面位址 查看網路介面及 ip（網際網路協定位址）設定。 這是 linux 常見指令；macos（蘋果電腦系統）可改用 ifconfig。 網路">
+<div class="command-info"><div class="command-title"><strong>查看網路介面位址</strong><span class="category">網路</span></div>
+<p class="command-desc">查看網路介面及 IP（網際網路協定位址）設定。</p><p class="command-tip"><span class="tip-label">補充</span>這是 Linux 常見指令；macOS（蘋果電腦系統）可改用 ifconfig。</p></div>
+<div class="command-box"><code>ip addr</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 ip addr">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 ip addr" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="ping [IP / 網域]" data-search="網路與遠端連線 檢查網路位址、服務可達性、監聽連接埠與遠端登入。 ping [ip / 網域] 測試基本網路可達性 透過網路控制訊息測試目標是否回應。 按 ctrl+c 停止；無回應不一定代表服務無法使用，可能被防火牆阻擋。 網路">
+<div class="command-info"><div class="command-title"><strong>測試基本網路可達性</strong><span class="category">網路</span></div>
+<p class="command-desc">透過網路控制訊息測試目標是否回應。</p><p class="command-tip"><span class="tip-label">補充</span>按 Ctrl+C 停止；無回應不一定代表服務無法使用，可能被防火牆阻擋。</p></div>
+<div class="command-box"><code>ping [IP / 網域]</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 ping [IP / 網域]">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 ping [IP / 網域]" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="curl [網址]" data-search="網路與遠端連線 檢查網路位址、服務可達性、監聽連接埠與遠端登入。 curl [網址] 發出網頁請求 向指定網址發出請求並查看回傳內容。 例如 curl -i https://example.com 只查看回應標頭。 網路">
+<div class="command-info"><div class="command-title"><strong>發出網頁請求</strong><span class="category">網路</span></div>
+<p class="command-desc">向指定網址發出請求並查看回傳內容。</p><p class="command-tip"><span class="tip-label">補充</span>例如 curl -I https://example.com 只查看回應標頭。</p></div>
+<div class="command-box"><code>curl [網址]</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 curl [網址]">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 curl [網址]" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="ss -tulpn" data-search="網路與遠端連線 檢查網路位址、服務可達性、監聽連接埠與遠端登入。 ss -tulpn 查看連接埠與監聽程序 列出網路套接字、監聽中的 tcp／udp（傳輸控制協定／使用者資料包協定）連接埠及程序。 部分程序資訊需管理權限才能完整查看；主要適用於 linux。 連接埠">
+<div class="command-info"><div class="command-title"><strong>查看連接埠與監聽程序</strong><span class="category">連接埠</span></div>
+<p class="command-desc">列出網路套接字、監聽中的 TCP／UDP（傳輸控制協定／使用者資料包協定）連接埠及程序。</p><p class="command-tip"><span class="tip-label">補充</span>部分程序資訊需管理權限才能完整查看；主要適用於 Linux。</p></div>
+<div class="command-box"><code>ss -tulpn</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 ss -tulpn">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 ss -tulpn" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="ssh user@host" data-search="網路與遠端連線 檢查網路位址、服務可達性、監聽連接埠與遠端登入。 ssh user@host 登入遠端主機 透過 ssh（安全殼層協定）連線到遠端系統。 把 user 換成帳號、host 換成主機名稱或位址；需要相應的登入憑證。 遠端">
+<div class="command-info"><div class="command-title"><strong>登入遠端主機</strong><span class="category">遠端</span></div>
+<p class="command-desc">透過 SSH（安全殼層協定）連線到遠端系統。</p><p class="command-tip"><span class="tip-label">補充</span>把 user 換成帳號、host 換成主機名稱或位址；需要相應的登入憑證。</p></div>
+<div class="command-box"><code>ssh user@host</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 ssh user@host">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 ssh user@host" aria-pressed="false">☆</button></div>
+</article>
+</div></section>
+<section class="command-section" id="services" data-section="services"><header class="section-heading"><div class="section-index">04</div><div class="section-meta"><h2>系統服務管理</h2><p>查看或控制由 systemd（系統與服務管理程式）管理的服務。</p></div><span class="section-count">3 條</span></header><div class="command-list">
+<article class="command-row" data-cmd="systemctl status [服務]" data-search="系統服務管理 查看或控制由 systemd（系統與服務管理程式）管理的服務。 systemctl status [服務] 查看服務狀態 檢視服務是否啟動、狀態與最近的執行資訊。 例如 systemctl status nginx；此指令適用於使用 systemd 的 linux。 服務">
+<div class="command-info"><div class="command-title"><strong>查看服務狀態</strong><span class="category">服務</span></div>
+<p class="command-desc">檢視服務是否啟動、狀態與最近的執行資訊。</p><p class="command-tip"><span class="tip-label">補充</span>例如 systemctl status nginx；此指令適用於使用 systemd 的 Linux。</p></div>
+<div class="command-box"><code>systemctl status [服務]</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 systemctl status [服務]">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 systemctl status [服務]" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row caution" data-cmd="systemctl restart [服務]" data-search="系統服務管理 查看或控制由 systemd（系統與服務管理程式）管理的服務。 systemctl restart [服務] 重新啟動服務 停止並重新啟動指定服務。 注意：可能短暫中斷連線或處理中的工作，先確認影響範圍。 謹慎">
+<div class="command-info"><div class="command-title"><strong>重新啟動服務</strong><span class="category">謹慎</span></div>
+<p class="command-desc">停止並重新啟動指定服務。</p><p class="command-tip"><span class="tip-label">注意</span>注意：可能短暫中斷連線或處理中的工作，先確認影響範圍。</p></div>
+<div class="command-box"><code>systemctl restart [服務]</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 systemctl restart [服務]">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 systemctl restart [服務]" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="journalctl -u [服務] -f" data-search="系統服務管理 查看或控制由 systemd（系統與服務管理程式）管理的服務。 journalctl -u [服務] -f 即時追蹤服務紀錄 查看指定服務新增的系統日誌內容。 按 ctrl+c 結束；若要查看歷史內容可去掉 -f。 紀錄">
+<div class="command-info"><div class="command-title"><strong>即時追蹤服務紀錄</strong><span class="category">紀錄</span></div>
+<p class="command-desc">查看指定服務新增的系統日誌內容。</p><p class="command-tip"><span class="tip-label">補充</span>按 Ctrl+C 結束；若要查看歷史內容可去掉 -f。</p></div>
+<div class="command-box"><code>journalctl -u [服務] -f</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 journalctl -u [服務] -f">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 journalctl -u [服務] -f" aria-pressed="false">☆</button></div>
+</article>
+</div></section>
+<section class="command-section" id="git" data-section="git"><header class="section-heading"><div class="section-index">05</div><div class="section-meta"><h2>Git（版本控制）</h2><p>追蹤檔案修改、管理分支，以及與遠端儲存庫同步。</p></div><span class="section-count">12 條</span></header><div class="command-list">
+<article class="command-row" data-cmd="git init" data-search="git（版本控制） 追蹤檔案修改、管理分支，以及與遠端儲存庫同步。 git init 建立本地儲存庫 將目前資料夾初始化為 git（版本控制）儲存庫。 適合新專案；已有儲存庫時通常不需要重複執行。 初始化">
+<div class="command-info"><div class="command-title"><strong>建立本地儲存庫</strong><span class="category">初始化</span></div>
+<p class="command-desc">將目前資料夾初始化為 Git（版本控制）儲存庫。</p><p class="command-tip"><span class="tip-label">補充</span>適合新專案；已有儲存庫時通常不需要重複執行。</p></div>
+<div class="command-box"><code>git init</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 git init">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 git init" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="git clone [網址]" data-search="git（版本控制） 追蹤檔案修改、管理分支，以及與遠端儲存庫同步。 git clone [網址] 複製遠端儲存庫 將遠端儲存庫及其版本歷史下載到本機。 執行後通常會建立同名專案資料夾。 同步">
+<div class="command-info"><div class="command-title"><strong>複製遠端儲存庫</strong><span class="category">同步</span></div>
+<p class="command-desc">將遠端儲存庫及其版本歷史下載到本機。</p><p class="command-tip"><span class="tip-label">補充</span>執行後通常會建立同名專案資料夾。</p></div>
+<div class="command-box"><code>git clone [網址]</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 git clone [網址]">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 git clone [網址]" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="git status" data-search="git（版本控制） 追蹤檔案修改、管理分支，以及與遠端儲存庫同步。 git status 查看目前變更 檢視所在分支、已修改與待提交的檔案。 修改檔案後先使用這個指令確認狀態。 檢視">
+<div class="command-info"><div class="command-title"><strong>查看目前變更</strong><span class="category">檢視</span></div>
+<p class="command-desc">檢視所在分支、已修改與待提交的檔案。</p><p class="command-tip"><span class="tip-label">補充</span>修改檔案後先使用這個指令確認狀態。</p></div>
+<div class="command-box"><code>git status</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 git status">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 git status" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="git diff" data-search="git（版本控制） 追蹤檔案修改、管理分支，以及與遠端儲存庫同步。 git diff 查看修改差異 顯示尚未加入暫存區的內容差異。 要檢查已暫存的修改，改用 git diff --staged。 檢視">
+<div class="command-info"><div class="command-title"><strong>查看修改差異</strong><span class="category">檢視</span></div>
+<p class="command-desc">顯示尚未加入暫存區的內容差異。</p><p class="command-tip"><span class="tip-label">補充</span>要檢查已暫存的修改，改用 git diff --staged。</p></div>
+<div class="command-box"><code>git diff</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 git diff">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 git diff" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row caution" data-cmd="git add ." data-search="git（版本控制） 追蹤檔案修改、管理分支，以及與遠端儲存庫同步。 git add . 暫存目前目錄的修改 把目前目錄及子目錄的修改加入暫存區。 可能包含新增與刪除檔案；先確認 git status，避免納入敏感資料。 謹慎">
+<div class="command-info"><div class="command-title"><strong>暫存目前目錄的修改</strong><span class="category">謹慎</span></div>
+<p class="command-desc">把目前目錄及子目錄的修改加入暫存區。</p><p class="command-tip"><span class="tip-label">注意</span>可能包含新增與刪除檔案；先確認 git status，避免納入敏感資料。</p></div>
+<div class="command-box"><code>git add .</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 git add .">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 git add ." aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="git commit -m &quot;說明&quot;" data-search="git（版本控制） 追蹤檔案修改、管理分支，以及與遠端儲存庫同步。 git commit -m &quot;說明&quot; 建立本地提交 將暫存的修改建立一筆附有說明的版本紀錄。 說明建議簡短具體，描述這次改動的目的。 提交">
+<div class="command-info"><div class="command-title"><strong>建立本地提交</strong><span class="category">提交</span></div>
+<p class="command-desc">將暫存的修改建立一筆附有說明的版本紀錄。</p><p class="command-tip"><span class="tip-label">補充</span>說明建議簡短具體，描述這次改動的目的。</p></div>
+<div class="command-box"><code>git commit -m &quot;說明&quot;</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 git commit -m &quot;說明&quot;">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 git commit -m &quot;說明&quot;" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="git branch" data-search="git（版本控制） 追蹤檔案修改、管理分支，以及與遠端儲存庫同步。 git branch 查看本地分支 顯示現有本地分支與目前所在的分支。 若要連遠端分支一起查看，可用 git branch -a。 分支">
+<div class="command-info"><div class="command-title"><strong>查看本地分支</strong><span class="category">分支</span></div>
+<p class="command-desc">顯示現有本地分支與目前所在的分支。</p><p class="command-tip"><span class="tip-label">補充</span>若要連遠端分支一起查看，可用 git branch -a。</p></div>
+<div class="command-box"><code>git branch</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 git branch">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 git branch" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="git switch [分支]" data-search="git（版本控制） 追蹤檔案修改、管理分支，以及與遠端儲存庫同步。 git switch [分支] 切換工作分支 切換到指定的本地分支。 若目前有未提交的修改，可能需要先處理才能切換。 分支">
+<div class="command-info"><div class="command-title"><strong>切換工作分支</strong><span class="category">分支</span></div>
+<p class="command-desc">切換到指定的本地分支。</p><p class="command-tip"><span class="tip-label">補充</span>若目前有未提交的修改，可能需要先處理才能切換。</p></div>
+<div class="command-box"><code>git switch [分支]</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 git switch [分支]">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 git switch [分支]" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="git fetch" data-search="git（版本控制） 追蹤檔案修改、管理分支，以及與遠端儲存庫同步。 git fetch 取得遠端版本資訊 下載遠端的新版本資訊，但不直接合併進目前分支。 適合先觀察遠端變動；可搭配 git status 或 git log 查驗。 同步">
+<div class="command-info"><div class="command-title"><strong>取得遠端版本資訊</strong><span class="category">同步</span></div>
+<p class="command-desc">下載遠端的新版本資訊，但不直接合併進目前分支。</p><p class="command-tip"><span class="tip-label">補充</span>適合先觀察遠端變動；可搭配 git status 或 git log 查驗。</p></div>
+<div class="command-box"><code>git fetch</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 git fetch">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 git fetch" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="git pull" data-search="git（版本控制） 追蹤檔案修改、管理分支，以及與遠端儲存庫同步。 git pull 取得並整合遠端更新 抓取遠端更新，並依儲存庫設定進行合併或重定基底。 可能發生衝突；執行前先確認本地未提交修改。 同步">
+<div class="command-info"><div class="command-title"><strong>取得並整合遠端更新</strong><span class="category">同步</span></div>
+<p class="command-desc">抓取遠端更新，並依儲存庫設定進行合併或重定基底。</p><p class="command-tip"><span class="tip-label">補充</span>可能發生衝突；執行前先確認本地未提交修改。</p></div>
+<div class="command-box"><code>git pull</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 git pull">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 git pull" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="git push" data-search="git（版本控制） 追蹤檔案修改、管理分支，以及與遠端儲存庫同步。 git push 推送本地提交 把本地提交傳送到設定好的遠端分支。 推送前建議先確認分支與提交內容。 同步">
+<div class="command-info"><div class="command-title"><strong>推送本地提交</strong><span class="category">同步</span></div>
+<p class="command-desc">把本地提交傳送到設定好的遠端分支。</p><p class="command-tip"><span class="tip-label">補充</span>推送前建議先確認分支與提交內容。</p></div>
+<div class="command-box"><code>git push</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 git push">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 git push" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="git log --oneline" data-search="git（版本控制） 追蹤檔案修改、管理分支，以及與遠端儲存庫同步。 git log --oneline 快速查看提交歷史 以精簡格式顯示提交識別碼與說明。 適合快速辨識近期修改；按 q 可離開分頁顯示。 檢視">
+<div class="command-info"><div class="command-title"><strong>快速查看提交歷史</strong><span class="category">檢視</span></div>
+<p class="command-desc">以精簡格式顯示提交識別碼與說明。</p><p class="command-tip"><span class="tip-label">補充</span>適合快速辨識近期修改；按 q 可離開分頁顯示。</p></div>
+<div class="command-box"><code>git log --oneline</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 git log --oneline">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 git log --oneline" aria-pressed="false">☆</button></div>
+</article>
+</div></section>
+<section class="command-section" id="docker" data-section="docker"><header class="section-heading"><div class="section-index">06</div><div class="section-meta"><h2>Docker Compose（容器編排工具）</h2><p>以專案設定檔啟動、檢查及管理多個容器化服務。</p></div><span class="section-count">7 條</span></header><div class="command-list">
+<article class="command-row" data-cmd="docker compose up -d" data-search="docker compose（容器編排工具） 以專案設定檔啟動、檢查及管理多個容器化服務。 docker compose up -d 背景啟動專案服務 依容器編排設定建立並啟動服務，在背景持續執行。 通常需要在有 compose.yaml 等設定檔的專案目錄執行。 啟動">
+<div class="command-info"><div class="command-title"><strong>背景啟動專案服務</strong><span class="category">啟動</span></div>
+<p class="command-desc">依容器編排設定建立並啟動服務，在背景持續執行。</p><p class="command-tip"><span class="tip-label">補充</span>通常需要在有 compose.yaml 等設定檔的專案目錄執行。</p></div>
+<div class="command-box"><code>docker compose up -d</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 docker compose up -d">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 docker compose up -d" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="docker compose up -d --build" data-search="docker compose（容器編排工具） 以專案設定檔啟動、檢查及管理多個容器化服務。 docker compose up -d --build 重新建置並啟動 先重新建置需要的映像，再建立或更新服務。 程式碼或映像建置內容變更後常用；可能造成服務重新建立。 建置">
+<div class="command-info"><div class="command-title"><strong>重新建置並啟動</strong><span class="category">建置</span></div>
+<p class="command-desc">先重新建置需要的映像，再建立或更新服務。</p><p class="command-tip"><span class="tip-label">補充</span>程式碼或映像建置內容變更後常用；可能造成服務重新建立。</p></div>
+<div class="command-box"><code>docker compose up -d --build</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 docker compose up -d --build">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 docker compose up -d --build" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="docker compose ps" data-search="docker compose（容器編排工具） 以專案設定檔啟動、檢查及管理多個容器化服務。 docker compose ps 查看服務容器狀態 列出此專案的容器、狀態及對應連接埠。 適合確認各服務是否啟動與是否異常退出。 檢視">
+<div class="command-info"><div class="command-title"><strong>查看服務容器狀態</strong><span class="category">檢視</span></div>
+<p class="command-desc">列出此專案的容器、狀態及對應連接埠。</p><p class="command-tip"><span class="tip-label">補充</span>適合確認各服務是否啟動與是否異常退出。</p></div>
+<div class="command-box"><code>docker compose ps</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 docker compose ps">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 docker compose ps" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="docker compose logs -f" data-search="docker compose（容器編排工具） 以專案設定檔啟動、檢查及管理多個容器化服務。 docker compose logs -f 持續查看容器紀錄 連續顯示此專案各服務新增的紀錄。 可在後面加服務名稱只看單一服務；按 ctrl+c 離開。 紀錄">
+<div class="command-info"><div class="command-title"><strong>持續查看容器紀錄</strong><span class="category">紀錄</span></div>
+<p class="command-desc">連續顯示此專案各服務新增的紀錄。</p><p class="command-tip"><span class="tip-label">補充</span>可在後面加服務名稱只看單一服務；按 Ctrl+C 離開。</p></div>
+<div class="command-box"><code>docker compose logs -f</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 docker compose logs -f">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 docker compose logs -f" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row caution" data-cmd="docker compose restart" data-search="docker compose（容器編排工具） 以專案設定檔啟動、檢查及管理多個容器化服務。 docker compose restart 重新啟動現有服務 重新啟動專案中已存在的服務容器。 不會重新建置映像；設定變更通常需重新建立容器才會生效。 謹慎">
+<div class="command-info"><div class="command-title"><strong>重新啟動現有服務</strong><span class="category">謹慎</span></div>
+<p class="command-desc">重新啟動專案中已存在的服務容器。</p><p class="command-tip"><span class="tip-label">注意</span>不會重新建置映像；設定變更通常需重新建立容器才會生效。</p></div>
+<div class="command-box"><code>docker compose restart</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 docker compose restart">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 docker compose restart" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row" data-cmd="docker compose exec [服務] sh" data-search="docker compose（容器編排工具） 以專案設定檔啟動、檢查及管理多個容器化服務。 docker compose exec [服務] sh 進入執行中的容器 在指定服務的容器內啟動命令列環境。 若容器有 bash（命令列殼層），可視需要改用 bash；容器必須正在執行。 操作">
+<div class="command-info"><div class="command-title"><strong>進入執行中的容器</strong><span class="category">操作</span></div>
+<p class="command-desc">在指定服務的容器內啟動命令列環境。</p><p class="command-tip"><span class="tip-label">補充</span>若容器有 bash（命令列殼層），可視需要改用 bash；容器必須正在執行。</p></div>
+<div class="command-box"><code>docker compose exec [服務] sh</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 docker compose exec [服務] sh">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 docker compose exec [服務] sh" aria-pressed="false">☆</button></div>
+</article>
+<article class="command-row caution" data-cmd="docker compose down" data-search="docker compose（容器編排工具） 以專案設定檔啟動、檢查及管理多個容器化服務。 docker compose down 停止並移除專案容器 停止並移除專案建立的容器與預設網路。 預設不會移除具名資料卷；不要隨意加 --volumes，以免刪除資料。 謹慎">
+<div class="command-info"><div class="command-title"><strong>停止並移除專案容器</strong><span class="category">謹慎</span></div>
+<p class="command-desc">停止並移除專案建立的容器與預設網路。</p><p class="command-tip"><span class="tip-label">注意</span>預設不會移除具名資料卷；不要隨意加 --volumes，以免刪除資料。</p></div>
+<div class="command-box"><code>docker compose down</code><button type="button" class="copy-btn" title="複製指令" aria-label="複製 docker compose down">複製</button><button type="button" class="star-btn" title="收藏指令" aria-label="收藏 docker compose down" aria-pressed="false">☆</button></div>
+</article>
+</div></section>
+</div><div id="empty" class="empty" hidden><strong id="emptyTitle">沒有符合的指令</strong><span id="emptyDesc">請更換搜尋文字，或關閉收藏篩選。</span></div>
+<footer class="footer">使用提醒：<code>[路徑]</code>、<code>[檔名]</code>、<code>[服務]</code> 等是需自行替換的示意欄位；執行會修改系統的指令前，請先確認目標與影響。收藏及主題偏好只儲存在目前瀏覽器，不會自動跨裝置同步。</footer>
+</div></main></div><div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 <script>
+
 (() => {
-  'use strict';
-  const rows = [...document.querySelectorAll('.command-row')];
-  const sections = [...document.querySelectorAll('.command-section')];
-  const input = document.getElementById('search');
-  const favBtn = document.getElementById('favFilter');
-  const themeBtn = document.getElementById('theme');
-  const results = document.getElementById('results');
-  const empty = document.getElementById('empty');
-  const storageRead = (key, fallback) => { try { return localStorage.getItem(key) ?? fallback; } catch { return fallback; } };
-  const storageWrite = (key, value) => { try { localStorage.setItem(key, value); } catch { /* 本機檔案模式下可能禁止儲存 */ } };
-  let favorites;
-  try { favorites = new Set(JSON.parse(storageRead('personal-command-favorites-v1', '[]'))); } catch { favorites = new Set(); }
-  let onlyFavorites = false;
-  const normalize = (s) => s.trim().toLocaleLowerCase();
-  function updateStars() {
-    rows.forEach(row => {
-      const b = row.querySelector('.star-btn');
-      const active = favorites.has(row.dataset.cmd);
-      b.textContent = active ? '★' : '☆';
-      b.setAttribute('aria-pressed', String(active));
-      b.setAttribute('aria-label', `${active ? '取消收藏' : '收藏'} ${row.dataset.cmd}`);
-    });
-  }
-  function filter() {
-    const q = normalize(input.value);
-    let visible = 0;
-    rows.forEach(row => {
-      const haystack = normalize(row.textContent);
-      const match = (!q || haystack.includes(q)) && (!onlyFavorites || favorites.has(row.dataset.cmd));
-      row.hidden = !match;
-      if (match) visible++;
-    });
-    sections.forEach(section => {
-      const count = section.querySelectorAll('.command-row:not([hidden])').length;
-      section.hidden = count === 0;
-      const navLink = document.querySelector(`.nav-link[data-section="${section.dataset.section}"]`);
-      navLink.hidden = count === 0;
-    });
-    results.textContent = (q || onlyFavorites) ? `找到 ${visible} 條符合的指令` : `顯示全部 ${visible} 條指令`;
-    empty.hidden = visible !== 0;
-  }
-  function flash(button, text, ms=1600) {
-    const old = button.textContent;
-    button.textContent = text;
-    window.setTimeout(() => { button.textContent = old; }, ms);
-  }
-  async function copyText(value) {
-    if (navigator.clipboard?.writeText) {
-      try { await navigator.clipboard.writeText(value); return true; } catch { /* 改用備援方式 */ }
-    }
-    const t = document.createElement('textarea');
-    t.value = value; t.setAttribute('readonly',''); t.style.cssText = 'position:fixed;left:-9999px;top:0;opacity:0';
-    document.body.appendChild(t); t.select();
-    let ok = false;
-    try { ok = document.execCommand('copy'); } catch { /* 瀏覽器可能禁用 */ }
-    t.remove(); return ok;
-  }
-  document.getElementById('sections').addEventListener('click', async (event) => {
-    const row = event.target.closest('.command-row');
-    if (!row) return;
-    const star = event.target.closest('.star-btn');
-    if (star) {
-      const cmd = row.dataset.cmd;
-      if (favorites.has(cmd)) favorites.delete(cmd); else favorites.add(cmd);
-      storageWrite('personal-command-favorites-v1', JSON.stringify([...favorites]));
-      updateStars(); filter(); return;
-    }
-    const copy = event.target.closest('.copy-btn');
-    if (copy) {
-      const ok = await copyText(row.dataset.cmd);
-      if (ok) flash(copy, '已複製');
-      else { flash(copy, '請手動複製', 2400); row.querySelector('code')?.focus(); }
-    }
-  });
-  favBtn.addEventListener('click', () => { onlyFavorites = !onlyFavorites; favBtn.setAttribute('aria-pressed', String(onlyFavorites)); favBtn.textContent = onlyFavorites ? '★ 顯示全部' : '☆ 只看收藏'; filter(); });
-  input.addEventListener('input', filter);
-  document.addEventListener('keydown', event => {
-    if (event.key === '/' && !(event.target instanceof HTMLInputElement) && !(event.target instanceof HTMLTextAreaElement) && !event.ctrlKey && !event.metaKey && !event.altKey) { event.preventDefault(); input.focus(); }
-    if (event.key === 'Escape' && document.activeElement === input) { input.value=''; filter(); input.blur(); }
-  });
-  const savedTheme = storageRead('personal-command-theme-v1','light');
-  function theme(mode) { document.documentElement.dataset.theme = mode; themeBtn.textContent = mode === 'dark' ? '切換亮色模式' : '切換深色模式'; }
-  theme(savedTheme === 'dark' ? 'dark' : 'light');
-  themeBtn.addEventListener('click', () => { const t = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; theme(t); storageWrite('personal-command-theme-v1', t); });
-  updateStars(); filter();
+ 'use strict';
+ const $ = selector => document.querySelector(selector);
+ const rows = [...document.querySelectorAll('.command-row')];
+ const sections = [...document.querySelectorAll('.command-section')];
+ const input = $('#search'), favFilter = $('#favFilter'), themeBtn = $('#theme');
+ const result = $('#results'), empty = $('#empty'), toastEl = $('#toast');
+ const read = (key, fallback) => {try{return localStorage.getItem(key) ?? fallback}catch{return fallback}};
+ const write = (key, value) => {try{localStorage.setItem(key,value)}catch{ /* 瀏覽器可能不支援 */ }};
+ let favorites;
+ try {const saved = JSON.parse(read('personal-command-favorites-v1','[]'));favorites=new Set(Array.isArray(saved)?saved.filter(x=>typeof x==='string'):[])}
+ catch {favorites=new Set()}
+ let onlyFavorites = false, toastTimer;
+ const normalize = value => String(value ?? '').toLocaleLowerCase().trim();
+ function updateStars(){
+   rows.forEach(row => {
+     const b=row.querySelector('.star-btn');
+     const selected=favorites.has(row.dataset.cmd);
+     b.textContent=selected?'★':'☆';
+     b.setAttribute('aria-pressed', String(selected));
+     b.setAttribute('aria-label', `${selected?'取消收藏':'收藏'} ${row.dataset.cmd}`);
+     b.title=selected?'取消收藏':'收藏指令';
+   });
+ }
+ function filter(){
+   const terms=normalize(input.value).split(/\s+/).filter(Boolean);
+   let visible=0;
+   rows.forEach(row => {
+     const match=terms.every(term=>row.dataset.search.includes(term)) && (!onlyFavorites || favorites.has(row.dataset.cmd));
+     row.hidden=!match;
+     if(match)visible++;
+   });
+   sections.forEach(section => {
+     const num=section.querySelectorAll('.command-row:not([hidden])').length;
+     const total=section.querySelectorAll('.command-row').length;
+     section.hidden=num===0;
+     section.querySelector('.section-count').textContent=(input.value.trim() || onlyFavorites)?`${num}／${total} 條`:`${total} 條`;
+     const nav=$(`.nav-link[data-section="${section.dataset.section}"]`);
+     if(nav){nav.hidden=num===0;nav.querySelector('.nav-count').textContent=(input.value.trim()||onlyFavorites)?String(num):String(total).padStart(2,'0')}
+   });
+   result.textContent=(terms.length||onlyFavorites)?`找到 ${visible} 條符合的指令`:`顯示全部 ${visible} 條指令`;
+   empty.hidden=visible>0;
+   if(visible===0){
+     $('#emptyTitle').textContent=(onlyFavorites && favorites.size===0)?'尚未收藏任何指令':'沒有符合的指令';
+     $('#emptyDesc').textContent=(onlyFavorites && favorites.size===0)?'按下指令旁的星號，即可加入收藏。':'請更換搜尋文字，或關閉收藏篩選。';
+   }
+ }
+ function toast(message){
+   toastEl.textContent=message;toastEl.classList.add('show');
+   clearTimeout(toastTimer);toastTimer=setTimeout(()=>toastEl.classList.remove('show'),1700);
+ }
+ function selectCode(row){
+   const code=row.querySelector('code');
+   if(!code)return;
+   const range=document.createRange();range.selectNodeContents(code);
+   const selection=window.getSelection();selection.removeAllRanges();selection.addRange(range);
+ }
+ async function copyCommand(value){
+   if(navigator.clipboard?.writeText){
+     try{await navigator.clipboard.writeText(value);return true}catch{/* HTTP 或瀏覽器權限限制 */}
+   }
+   const el=document.createElement('textarea');el.value=value;el.readOnly=true;
+   el.style.cssText='position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;z-index:-1';
+   document.body.appendChild(el);el.focus();el.select();el.setSelectionRange(0,el.value.length);
+   let ok=false;try{ok=document.execCommand('copy')}catch{/* 不支援 */}el.remove();return ok;
+ }
+ $('#sections').addEventListener('click',async e=>{
+   const target=e.target;
+   if(!(target instanceof Element))return;
+   const row=target.closest('.command-row');if(!row)return;
+   if(target.closest('.star-btn')){
+     const key=row.dataset.cmd;
+     if(favorites.has(key))favorites.delete(key);else favorites.add(key);
+     write('personal-command-favorites-v1',JSON.stringify([...favorites]));
+     updateStars();filter();toast(favorites.has(key)?'已加入收藏':'已取消收藏');return;
+   }
+   const button=target.closest('.copy-btn');if(!button)return;
+   const copied=await copyCommand(row.dataset.cmd);
+   if(copied){button.textContent='已複製';toast('已複製指令');setTimeout(()=>{button.textContent='複製'},1300)}
+   else{selectCode(row);toast('無法自動複製，已選取指令，請手動複製')}
+ });
+ favFilter.addEventListener('click',()=>{
+   onlyFavorites=!onlyFavorites;
+   favFilter.setAttribute('aria-pressed',String(onlyFavorites));
+   favFilter.textContent=onlyFavorites?'★ 顯示全部':'☆ 只看收藏';
+   filter();
+ });
+ input.addEventListener('input',filter);
+ document.addEventListener('keydown',e=>{
+   const typing=e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target.isContentEditable;
+   if(e.key==='/' && !typing && !e.ctrlKey && !e.metaKey && !e.altKey){e.preventDefault();input.focus()}
+   if(e.key==='Escape' && document.activeElement===input){input.value='';filter();input.blur()}
+ });
+ const themeStorage='personal-command-theme-v1';
+ function setTheme(mode){document.documentElement.dataset.theme=mode;themeBtn.textContent=mode==='dark'?'切換亮色':'切換深色';themeBtn.setAttribute('aria-label',mode==='dark'?'切換亮色模式':'切換深色模式')}
+ setTheme(read(themeStorage,'light')==='dark'?'dark':'light');
+ themeBtn.addEventListener('click',()=>{const mode=document.documentElement.dataset.theme==='dark'?'light':'dark';setTheme(mode);write(themeStorage,mode)});
+ if('IntersectionObserver' in window){
+   const observer=new IntersectionObserver(entries=>{
+     const visible=entries.filter(e=>e.isIntersecting && !e.target.hidden).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top);
+     if(visible.length){document.querySelectorAll('.nav-link').forEach(n=>n.removeAttribute('aria-current'));const n=$(`.nav-link[data-section="${visible[0].target.dataset.section}"]`);n?.setAttribute('aria-current','location')}
+   },{rootMargin:'-15% 0px -70% 0px',threshold:0});
+   sections.forEach(s=>observer.observe(s));
+ }
+ updateStars();filter();
 })();
 </script>
 </body>
