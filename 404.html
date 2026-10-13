@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#f6f8fb">
+  <title>找不到頁面｜404</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #677489;
+      --line: #e5eaf1;
+      --accent: #315a9b;
+      --accent-hover: #254a82;
+      --accent-soft: #edf3fc;
+      --shadow: 0 26px 80px -36px rgba(28, 48, 83, .28), 0 5px 16px rgba(28, 48, 83, .04);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      min-height: 100dvh;
+      margin: 0;
+      padding: 32px 20px;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(ellipse 52% 54% at 8% 9%, rgba(223, 233, 249, .65), transparent 100%),
+        radial-gradient(ellipse 46% 44% at 96% 95%, rgba(232, 238, 249, .75), transparent 100%),
+        var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    main { width: min(100%, 640px); }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      padding: 64px 48px 55px;
+      border: 1px solid rgba(225, 231, 240, .9);
+      border-radius: 28px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .symbol {
+      display: inline-grid;
+      width: 64px;
+      height: 64px;
+      place-items: center;
+      border: 1px solid #dae7fa;
+      border-radius: 20px;
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .eyebrow {
+      margin: 28px 0 2px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .13em;
+    }
+
+    .code {
+      margin: 0;
+      color: #233147;
+      font-size: clamp(88px, 16vw, 126px);
+      font-weight: 720;
+      letter-spacing: -.095em;
+      line-height: 1.17;
+      font-variant-numeric: tabular-nums;
+      padding-right: .095em;
+    }
+
+    h1 {
+      margin: 8px 0 12px;
+      font-size: clamp(25px, 4vw, 31px);
+      font-weight: 680;
+      letter-spacing: -.03em;
+      line-height: 1.4;
+    }
+
+    .description {
+      max-width: 390px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.9;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 35px;
+    }
+
+    .action {
+      display: inline-flex;
+      min-height: 46px;
+      min-width: 142px;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 11px 21px;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 620;
+      line-height: 1.2;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color .2s ease, border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+    }
+
+    .action:focus-visible {
+      outline: 3px solid #8eb3ee;
+      outline-offset: 3px;
+    }
+
+    .action-primary {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 5px 11px rgba(49, 90, 155, .13);
+    }
+
+    .action-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+    .action-secondary {
+      border-color: var(--line);
+      background: #fff;
+      color: #34445e;
+    }
+
+    .action-secondary:hover { background: #f5f7fb; border-color: #d3dce9; }
+
+    .hint {
+      margin: 30px 0 0;
+      color: #909bac;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 520px) {
+      body { padding: 20px 14px; }
+      .card { padding: 50px 22px 42px; border-radius: 22px; }
+      .eyebrow { margin-top: 24px; }
+      .actions { gap: 10px; }
+      .action { min-width: 0; flex: 1 1 145px; }
+    }
+
+    @media (max-width: 355px) {
+      .actions { flex-direction: column; }
+      .action { width: 100%; flex: auto; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .action { transition: none; }
+      .action-primary:hover { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="card" aria-labelledby="page-title">
+      <div class="symbol" aria-hidden="true">
+        <svg width="31" height="31" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9.8 13.7a5 5 0 0 0 7.1 0l2-2a5 5 0 0 0-7.1-7.1l-1.3 1.3"/>
+          <path d="M14.2 10.3a5 5 0 0 0-7.1 0l-2 2a5 5 0 0 0 7.1 7.1l1.3-1.3"/>
+          <path d="m8.5 3-.7-1.5M4 6l-1.5-.7M20 18l1.5.7"/>
+        </svg>
+      </div>
+      <p class="eyebrow">錯誤代碼 · 404</p>
+      <p class="code" aria-hidden="true">404</p>
+      <h1 id="page-title">這個頁面不存在</h1>
+      <p class="description">你造訪的頁面可能已經移動、刪除，<br class="desktop-break">或是網址輸入有誤。</p>
+
+      <div class="actions">
+        <a class="action action-primary" href="/">
+          返回首頁
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+        </a>
+        <button class="action action-secondary" type="button" id="go-back">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5m6 6-6-6 6-6"/></svg>
+          返回上一頁
+        </button>
+      </div>
+      <p class="hint">請確認網址是否正確，或從首頁重新開始。</p>
+    </section>
+  </main>
+  <script>
+    document.getElementById('go-back').addEventListener('click', function () {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.assign('/');
+      }
+    });
+  </script>
+</body>
+</html>
